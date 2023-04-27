@@ -27,6 +27,7 @@ public abstract class Peca {
     protected Peca(String sAFileName, Posicao aPosicao) {
         this.pPosicao = aPosicao;
         try {
+            System.out.println(Consts.PATH);
             iImage = new ImageIcon(new java.io.File(".").getCanonicalPath() + Consts.PATH + sAFileName);
         } catch (IOException ex) {
             System.out.println(ex.getMessage());

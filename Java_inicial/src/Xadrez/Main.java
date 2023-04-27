@@ -5,7 +5,7 @@
 package Xadrez;
 
 import Pecas.Peao;
-import auxiliar.Posicao;
+import Auxiliar.Posicao;
 
 /**
  *
@@ -20,14 +20,13 @@ public class Main {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 Jogo tMeuJogo = new Jogo();
-                tMeuJogo.addPeca(new Peao("Peao.png", new Posicao(6,0)), Jogo.CoresConjuntos.BRANCAS);
-                tMeuJogo.addPeca(new Peao("Peao.png", new Posicao(6,1)), Jogo.CoresConjuntos.BRANCAS);
-                tMeuJogo.addPeca(new Peao("Peao.png", new Posicao(6,2)), Jogo.CoresConjuntos.BRANCAS);
-                tMeuJogo.addPeca(new Peao("Peao.png", new Posicao(6,3)), Jogo.CoresConjuntos.BRANCAS);                
+                tMeuJogo.addPeca(new Peao("Peao.png", new Posicao(6, 0)), Jogo.CoresConjuntos.BRANCAS);
+                tMeuJogo.addPeca(new Peao("Peao.png", new Posicao(6, 1)), Jogo.CoresConjuntos.BRANCAS);
+                tMeuJogo.addPeca(new Peao("Peao.png", new Posicao(6, 2)), Jogo.CoresConjuntos.BRANCAS);
+                tMeuJogo.addPeca(new Peao("Peao.png", new Posicao(6, 3)), Jogo.CoresConjuntos.BRANCAS);
                 tMeuJogo.setVisible(true);
                 tMeuJogo.go();
             }
         });
     }
 }
-

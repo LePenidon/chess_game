@@ -1,42 +1,42 @@
-package auxiliar;
+package Auxiliar;
 
 import java.io.Serializable;
 
-public class Posicao implements Serializable{
-    private int	linha,
-                coluna;
+public class Posicao implements Serializable {
+    private int linha,
+            coluna;
 
-    public Posicao(int linha, int coluna){
+    public Posicao(int linha, int coluna) {
         this.linha = linha;
         this.coluna = coluna;
     }
 
-    public void setPosicao(int linha, int coluna){
+    public void setPosicao(int linha, int coluna) {
         this.linha = linha;
         this.coluna = coluna;
     }
-       
-    public void setLinha(int linha){
+
+    public void setLinha(int linha) {
         this.linha = linha;
     }
 
-    public int getLinha(){
+    public int getLinha() {
         return linha;
     }
 
-    public void setColuna(int coluna){
+    public void setColuna(int coluna) {
         this.coluna = coluna;
     }
 
-    public int getColuna(){
+    public int getColuna() {
         return coluna;
     }
 
-    public boolean igual(Posicao posicao){
+    public boolean igual(Posicao posicao) {
         return (linha == posicao.getLinha() && coluna == posicao.getColuna());
     }
 
-    public void setPosicao(Posicao posicao){
+    public void setPosicao(Posicao posicao) {
         setLinha(posicao.getLinha());
         setColuna(posicao.getColuna());
     }

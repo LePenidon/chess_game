@@ -5,7 +5,7 @@
 package Pecas;
 
 import Xadrez.Jogo;
-import auxiliar.Posicao;
+import Auxiliar.Posicao;
 import javax.swing.JPanel;
 
 /**
@@ -13,7 +13,7 @@ import javax.swing.JPanel;
  * @author junio
  */
 public class Bispo extends Peca {
-     public Bispo(String sAFileName, Posicao aPosicao) {
+    public Bispo(String sAFileName, Posicao aPosicao) {
         super(sAFileName, aPosicao);
     }
 }

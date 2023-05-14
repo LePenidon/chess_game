@@ -32,7 +32,7 @@ class Xadrez:
 
     def __init__(self):
         self.comprimento = 1000
-        self.altura = 900
+        self.altura = 600
         self.tela = pygame.display.set_mode((self.comprimento, self.altura))
         pygame.display.set_caption('Xadrez 1v1')
 
@@ -58,60 +58,60 @@ class Xadrez:
         rainha_brancas = pygame.image.load(
             'imgs/RainhaBranca.png')
         rainha_brancas = pygame.transform.scale(
-            rainha_brancas, (80, 80))
+            rainha_brancas, (40, 40))
         rainha_brancas_p = pygame.transform.scale(
-            rainha_brancas, (45, 45))
+            rainha_brancas, (20, 20))
         rainha_negras = pygame.image.load(
             'imgs/RainhaPreta.png')
         rainha_negras = pygame.transform.scale(
-            rainha_negras, (80, 80))
+            rainha_negras, (40, 40))
         rainha_negras_p = pygame.transform.scale(
-            rainha_negras, (45, 45))
+            rainha_negras, (20, 20))
         rei_brancas = pygame.image.load('imgs/ReiBranco.png')
-        rei_brancas = pygame.transform.scale(rei_brancas, (80, 80))
+        rei_brancas = pygame.transform.scale(rei_brancas, (40, 40))
         rei_brancas_p = pygame.transform.scale(
-            rei_brancas, (45, 45))
+            rei_brancas, (20, 20))
         rei_negras = pygame.image.load('imgs/ReiPreto.png')
-        rei_negras = pygame.transform.scale(rei_negras, (80, 80))
+        rei_negras = pygame.transform.scale(rei_negras, (40, 40))
         rei_negras_p = pygame.transform.scale(
-            rei_negras, (45, 45))
+            rei_negras, (20, 20))
         torre_negras = pygame.image.load('imgs/TorrePreta.png')
-        torre_negras = pygame.transform.scale(torre_negras, (80, 80))
+        torre_negras = pygame.transform.scale(torre_negras, (40, 40))
         torre_negras_p = pygame.transform.scale(
-            torre_negras, (45, 45))
+            torre_negras, (20, 20))
         bispo_negras = pygame.image.load('imgs/BispoPreto.png')
-        bispo_negras = pygame.transform.scale(bispo_negras, (80, 80))
+        bispo_negras = pygame.transform.scale(bispo_negras, (40, 40))
         bispo_negras_p = pygame.transform.scale(
-            bispo_negras, (45, 45))
+            bispo_negras, (20, 20))
         cavalo_negras = pygame.image.load('imgs/CavaloPreto.png')
         cavalo_negras = pygame.transform.scale(
-            cavalo_negras, (80, 80))
+            cavalo_negras, (40, 40))
         cavalo_negras_p = pygame.transform.scale(
-            cavalo_negras, (45, 45))
+            cavalo_negras, (20, 20))
         peao_negras = pygame.image.load('imgs/PeaoPreto.png')
-        peao_negras = pygame.transform.scale(peao_negras, (65, 65))
-        peao_negras_p = pygame.transform.scale(peao_negras, (45, 45))
+        peao_negras = pygame.transform.scale(peao_negras, (40, 40))
+        peao_negras_p = pygame.transform.scale(peao_negras, (20, 20))
         torre_brancas = pygame.image.load('imgs/TorreBranca.png')
         torre_brancas = pygame.transform.scale(
-            torre_brancas, (80, 80))
+            torre_brancas, (40, 40))
         torre_brancas_p = pygame.transform.scale(
-            torre_brancas, (45, 45))
+            torre_brancas, (20, 20))
         bispo_brancas = pygame.image.load(
             'imgs/BispoBranco.png')
         bispo_brancas = pygame.transform.scale(
-            bispo_brancas, (80, 80))
+            bispo_brancas, (40, 40))
         bispo_brancas_p = pygame.transform.scale(
-            bispo_brancas, (45, 45))
+            bispo_brancas, (20, 20))
         cavalo_brancas = pygame.image.load(
             'imgs/CavaloBranco.png')
         cavalo_brancas = pygame.transform.scale(
-            cavalo_brancas, (80, 80))
+            cavalo_brancas, (40, 40))
         cavalo_brancas_p = pygame.transform.scale(
-            cavalo_brancas, (45, 45))
+            cavalo_brancas, (20, 20))
         peao_brancas = pygame.image.load('imgs/PeaoBranco.png')
-        peao_brancas = pygame.transform.scale(peao_brancas, (65, 65))
+        peao_brancas = pygame.transform.scale(peao_brancas, (40, 40))
         peao_brancas_p = pygame.transform.scale(
-            peao_brancas, (45, 45))
+            peao_brancas, (20, 20))
 
         self.imagens_brancas = [peao_brancas, rainha_brancas, rei_brancas,
                                 cavalo_brancas, torre_brancas, bispo_brancas]

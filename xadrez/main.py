@@ -16,8 +16,8 @@ while run:
 
     draw_board(jogo)
     draw_pieces(jogo)
-    draw_captured(jogo)
-    draw_check(jogo, opcoes_negras, opcoes_brancas)
+    # draw_captured(jogo)
+    # draw_check(jogo, opcoes_negras, opcoes_brancas)
 
     if jogo.selecao != 100:
         jogo.movimentos_validos = check_valid_moves(
@@ -30,18 +30,18 @@ while run:
 
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and not jogo.fim:
 
-            x_coord = event.pos[0] // 100
-            y_coord = event.pos[1] // 100
+            x_coord = event.pos[0] // 60
+            y_coord = event.pos[1] // 60
 
             click_coords = (x_coord, y_coord)
+            # print(click_coords)
 
             if jogo.turno <= 1:
-                if click_coords == (8, 8) or click_coords == (9, 8):
+                if click_coords == (10, 9) or click_coords == (11, 9) or click_coords == (12, 9) or click_coords == (13, 9):
                     jogo.vencedor = 'negras'
 
                 if click_coords in jogo.loc_brancas:
                     jogo.selecao = jogo.loc_brancas.index(click_coords)
-
                     if jogo.turno == 0:
                         jogo.turno = 1
 
@@ -66,8 +66,9 @@ while run:
                     jogo.turno = 2
                     jogo.selecao = 100
                     jogo.movimentos_validos = []
+
             if jogo.turno > 1:
-                if click_coords == (8, 8) or click_coords == (9, 8):
+                if click_coords == (10, 9) or click_coords == (11, 9) or click_coords == (12, 9) or click_coords == (13, 9):
                     jogo.vencedor = 'brancas'
                 if click_coords in jogo.loc_negras:
                     jogo.selecao = jogo.loc_negras.index(click_coords)
@@ -114,7 +115,7 @@ while run:
 
     if jogo.vencedor != '':
         jogo.fim = True
-        draw_game_over()
+        draw_game_over(jogo)
 
     pygame.display.flip()
 

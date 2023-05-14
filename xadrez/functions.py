@@ -16,53 +16,52 @@ def draw_board(jogo: xd.Xadrez):
         row = i // 4
         if row % 2 == 0:
             pygame.draw.rect(jogo.tela, 'light gray', [
-                             600 - (column * 200), row * 100, 100, 100])
+                             (column * 120), row * 60, 60, 60])
         else:
             pygame.draw.rect(jogo.tela, 'light gray', [
-                             700 - (column * 200), row * 100, 100, 100])
-        pygame.draw.rect(jogo.tela, 'gray', [0, 800, jogo.comprimento, 100])
-        pygame.draw.rect(jogo.tela, 'gold', [0, 800, jogo.comprimento, 100], 5)
-        pygame.draw.rect(jogo.tela, 'gold', [800, 0, 200, jogo.altura], 5)
+                             60+(column * 120), row * 60, 60, 60])
+
         status_text = ['Brancas!', 'Brancas!',
                        'Negras!', 'Negras!']
-        jogo.tela.blit(jogo.fonte_grande.render(
-            status_text[jogo.turno], True, 'black'), (20, 820))
+        jogo.tela.blit(jogo.fonte_media.render(
+            status_text[jogo.turno], True, 'black'), (20, 550))
+
         for i in range(9):
             pygame.draw.line(jogo.tela, 'black',
-                             (0, 100 * i), (800, 100 * i), 2)
+                             (0, 60 * i), (480, 60 * i), 2)
             pygame.draw.line(jogo.tela, 'black',
-                             (100 * i, 0), (100 * i, 800), 2)
+                             (60 * i, 0), (60 * i, 480), 2)
+
         jogo.tela.blit(jogo.fonte_media.render(
-            'FORFEIT', True, 'black'), (810, 830))
+            'Abandonar', True, 'black'), (600, 550))
 
 
-# draw pieces onto board
 def draw_pieces(jogo: xd.Xadrez):
     for i in range(len(jogo.brancas)):
         index = jogo.pecas.index(jogo.brancas[i])
         if jogo.brancas[i] == 'peao':
             jogo.tela.blit(
-                jogo.imagens_brancas[0], (jogo.loc_brancas[i][0] * 100 + 22, jogo.loc_brancas[i][1] * 100 + 30))
+                jogo.imagens_brancas[0], ((jogo.loc_brancas[i][0] * 60)+10, (jogo.loc_brancas[i][1] * 60)+10))
         else:
-            jogo.tela.blit(jogo.imagens_brancas[index], (jogo.loc_brancas[i]
-                                                         [0] * 100 + 10, jogo.loc_brancas[i][1] * 100 + 10))
+            jogo.tela.blit(jogo.imagens_brancas[index], ((jogo.loc_brancas[i]
+                                                         [0] * 60)+10, (jogo.loc_brancas[i][1] * 60)+10))
         if jogo.turno < 2:
             if jogo.selecao == i:
-                pygame.draw.rect(jogo.tela, 'red', [jogo.loc_brancas[i][0] * 100 + 1, jogo.loc_brancas[i][1] * 100 + 1,
-                                                    100, 100], 2)
+                pygame.draw.rect(jogo.tela, 'red', [
+                                 (jogo.loc_brancas[i][0] * 60)+2, (jogo.loc_brancas[i][1] * 60)+2, 60, 60], 2)
 
     for i in range(len(jogo.negras)):
         index = jogo.pecas.index(jogo.negras[i])
         if jogo.negras[i] == 'peao':
             jogo.tela.blit(
-                jogo.imagens_negras[0], (jogo.loc_negras[i][0] * 100 + 22, jogo.loc_negras[i][1] * 100 + 30))
+                jogo.imagens_negras[0], ((jogo.loc_negras[i][0] * 60)+10, (jogo.loc_negras[i][1] * 60)+5))
         else:
-            jogo.tela.blit(jogo.imagens_negras[index], (jogo.loc_negras[i]
-                                                        [0] * 100 + 10, jogo.loc_negras[i][1] * 100 + 10))
+            jogo.tela.blit(jogo.imagens_negras[index], ((jogo.loc_negras[i]
+                                                        [0] * 60)+10, (jogo.loc_negras[i][1] * 60)+5))
         if jogo.turno >= 2:
             if jogo.selecao == i:
-                pygame.draw.rect(jogo.tela, 'blue', [jogo.loc_negras[i][0] * 100 + 1, jogo.loc_negras[i][1] * 100 + 1,
-                                                     100, 100], 2)
+                pygame.draw.rect(jogo.tela, 'blue', [
+                                 (jogo.loc_negras[i][0] * 60)+2, (jogo.loc_negras[i][1] * 60)+2, 60, 60], 2)
 
 
 # function to check all pieces valid options on board
@@ -120,7 +119,7 @@ def check_queen(position, color, jogo: xd.Xadrez):
 # check bishop moves
 def check_bishop(position, color, jogo: xd.Xadrez):
     moves_list = []
-    if color == 'white':
+    if color == 'brancas':
         enemies_list = jogo.loc_negras
         friends_list = jogo.loc_brancas
     else:
@@ -157,7 +156,7 @@ def check_bishop(position, color, jogo: xd.Xadrez):
 # check rook moves
 def check_rook(position, color, jogo: xd.Xadrez):
     moves_list = []
-    if color == 'white':
+    if color == 'brancas':
         enemies_list = jogo.loc_negras
         friends_list = jogo.loc_brancas
     else:
@@ -194,7 +193,7 @@ def check_rook(position, color, jogo: xd.Xadrez):
 # check valid pawn moves
 def check_pawn(position, color, jogo: xd.Xadrez):
     moves_list = []
-    if color == 'white':
+    if color == 'brancas':
         if (position[0], position[1] + 1) not in jogo.loc_brancas and \
                 (position[0], position[1] + 1) not in jogo.loc_negras and position[1] < 7:
             moves_list.append((position[0], position[1] + 1))
@@ -222,7 +221,7 @@ def check_pawn(position, color, jogo: xd.Xadrez):
 # check valid knight moves
 def check_knight(position, color, jogo: xd.Xadrez):
     moves_list = []
-    if color == 'white':
+    if color == 'brancas':
         enemies_list = jogo.loc_negras
         friends_list = jogo.loc_brancas
     else:
@@ -244,6 +243,7 @@ def check_valid_moves(opcoes_negras, opcoes_brancas, jogo: xd.Xadrez):
         options_list = opcoes_brancas
     else:
         options_list = opcoes_negras
+
     valid_options = options_list[jogo.selecao]
     return valid_options
 
@@ -255,7 +255,7 @@ def draw_valid(moves, jogo: xd.Xadrez):
         color = 'blue'
     for i in range(len(moves)):
         pygame.draw.circle(
-            jogo.tela, color, (moves[i][0] * 100 + 50, moves[i][1] * 100 + 50), 5)
+            jogo.tela, color, (moves[i][0] * 60+30, moves[i][1] * 60+30), 5)
 
 
 # draw captured pieces on side of jogo.tela
@@ -273,8 +273,8 @@ def draw_captured(jogo: xd.Xadrez):
 # draw a flashing square around king if in check
 def draw_check(jogo: xd.Xadrez, opcoes_negras, opcoes_brancas):
     if jogo.turno < 2:
-        if 'king' in jogo.brancas:
-            king_index = jogo.brancas.index('king')
+        if 'rei' in jogo.brancas:
+            king_index = jogo.brancas.index('rei')
             king_location = jogo.loc_brancas[king_index]
             for i in range(len(opcoes_negras)):
                 if king_location in opcoes_negras[i]:
@@ -282,8 +282,8 @@ def draw_check(jogo: xd.Xadrez, opcoes_negras, opcoes_brancas):
                         pygame.draw.rect(jogo.tela, 'dark red', [jogo.loc_brancas[king_index][0] * 100 + 1,
                                                                  jogo.loc_brancas[king_index][1] * 100 + 1, 100, 100], 5)
     else:
-        if 'king' in jogo.negras:
-            king_index = jogo.negras.index('king')
+        if 'rei' in jogo.negras:
+            king_index = jogo.negras.index('rei')
             king_location = jogo.loc_negras[king_index]
             for i in range(len(opcoes_brancas)):
                 if king_location in opcoes_brancas[i]:
@@ -293,7 +293,7 @@ def draw_check(jogo: xd.Xadrez, opcoes_negras, opcoes_brancas):
 
 
 def draw_game_over(jogo: xd.Xadrez):
-    pygame.draw.rect(jogo.tela, 'negras', [200, 200, 400, 70])
+    pygame.draw.rect(jogo.tela, 'black', [200, 200, 400, 70])
     jogo.tela.blit(jogo.fonte.render(
         f'{jogo.vencedor} won the game!', True, 'white'), (210, 210))
     jogo.tela.blit(jogo.fonte.render(f'Press ENTER to Restart!',

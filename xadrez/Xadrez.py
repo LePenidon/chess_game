@@ -41,11 +41,11 @@ class Xadrez:
         self.fonte_grande = pygame.font.Font('freesansbold.ttf', 50)
         self.tempo = pygame.time.Clock()
         self.fps = 60
-        self.brancas = ['torre', 'cavalo', 'bispo', 'rei', 'rainha', 'bispo', 'cavlo', 'torre',
+        self.brancas = ['torre', 'cavalo', 'bispo', 'rei', 'rainha', 'bispo', 'cavalo', 'torre',
                         'peao', 'peao', 'peao', 'peao', 'peao', 'peao', 'peao', 'peao']
         self.loc_brancas = [(0, 0), (1, 0), (2, 0), (3, 0), (4, 0), (5, 0), (6, 0), (7, 0),
                             (0, 1), (1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1), (7, 1)]
-        self.negras = ['torre', 'cavalo', 'bispo', 'rei', 'rainha', 'bispo', 'cavlo', 'torre',
+        self.negras = ['torre', 'cavalo', 'bispo', 'rei', 'rainha', 'bispo', 'cavalo', 'torre',
                        'peao', 'peao', 'peao', 'peao', 'peao', 'peao', 'peao', 'peao']
         self.loc_negras = [(0, 7), (1, 7), (2, 7), (3, 7), (4, 7), (5, 7), (6, 7), (7, 7),
                            (0, 6), (1, 6), (2, 6), (3, 6), (4, 6), (5, 6), (6, 6), (7, 6)]
@@ -61,10 +61,20 @@ class Xadrez:
             rainha_brancas, (80, 80))
         rainha_brancas_p = pygame.transform.scale(
             rainha_brancas, (45, 45))
+        rainha_negras = pygame.image.load(
+            'imgs/RainhaPreta.png')
+        rainha_negras = pygame.transform.scale(
+            rainha_negras, (80, 80))
+        rainha_negras_p = pygame.transform.scale(
+            rainha_negras, (45, 45))
         rei_brancas = pygame.image.load('imgs/ReiBranco.png')
         rei_brancas = pygame.transform.scale(rei_brancas, (80, 80))
         rei_brancas_p = pygame.transform.scale(
             rei_brancas, (45, 45))
+        rei_negras = pygame.image.load('imgs/ReiPreto.png')
+        rei_negras = pygame.transform.scale(rei_negras, (80, 80))
+        rei_negras_p = pygame.transform.scale(
+            rei_negras, (45, 45))
         torre_negras = pygame.image.load('imgs/TorrePreta.png')
         torre_negras = pygame.transform.scale(torre_negras, (80, 80))
         torre_negras_p = pygame.transform.scale(
@@ -109,10 +119,10 @@ class Xadrez:
         self.imagens_brancas_p = [peao_brancas_p, rainha_brancas_p, rei_brancas_p, cavalo_brancas_p,
                                   torre_brancas_p, bispo_brancas_p]
 
-        self.imagens_negras = [peao_negras, rainha_brancas, rei_brancas,
+        self.imagens_negras = [peao_negras, rainha_negras, rei_negras,
                                cavalo_negras, torre_negras, bispo_negras]
 
-        self.imagens_negras_p = [peao_negras_p, rainha_brancas_p, rei_brancas_p, cavalo_negras_p,
+        self.imagens_negras_p = [peao_negras_p, rainha_negras_p, rei_negras_p, cavalo_negras_p,
                                  torre_negras_p, bispo_negras_p]
 
         self.pecas = ['peao', 'rainha', 'rei', 'cavalo', 'torre', 'bispo']

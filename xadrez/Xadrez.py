@@ -2,8 +2,8 @@ import pygame
 
 
 class Xadrez:
-    largura = 0
     comprimento = 0
+    altura = 0
     tela = 0
     fonte = 0
     fonte_media = 0
@@ -26,22 +26,21 @@ class Xadrez:
     imagens_negras_p = 0
 
     pecas = 0
-    verificacao = 0
+    contador = 0
     vencedor = 0
     fim = 0
 
     def __init__(self):
-        self.comprimento = 700
-        self.altura = 500
+        self.comprimento = 1000
+        self.altura = 900
         self.tela = pygame.display.set_mode((self.comprimento, self.altura))
         pygame.display.set_caption('Xadrez 1v1')
 
-        # self.fonte = pygame.font.Font('freesansbold.ttf', 20)
-        # self.fonte_media = pygame.font.Font('freesansbold.ttf', 40)
-        # self.fonte_grande = pygame.font.Font('freesansbold.ttf', 50)
+        self.fonte = pygame.font.Font('freesansbold.ttf', 20)
+        self.fonte_media = pygame.font.Font('freesansbold.ttf', 40)
+        self.fonte_grande = pygame.font.Font('freesansbold.ttf', 50)
         self.tempo = pygame.time.Clock()
         self.fps = 60
-        # game variables and images
         self.brancas = ['torre', 'cavalo', 'bispo', 'rei', 'rainha', 'bispo', 'cavlo', 'torre',
                         'peao', 'peao', 'peao', 'peao', 'peao', 'peao', 'peao', 'peao']
         self.loc_brancas = [(0, 0), (1, 0), (2, 0), (3, 0), (4, 0), (5, 0), (6, 0), (7, 0),
@@ -118,7 +117,7 @@ class Xadrez:
 
         self.pecas = ['peao', 'rainha', 'rei', 'cavalo', 'torre', 'bispo']
 
-        self.verificacao = 0
+        self.contador = 0
         self.vencedor = ''
         self.fim = False
 

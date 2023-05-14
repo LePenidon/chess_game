@@ -10,91 +10,94 @@ def inicio_jogo():
     return jogo
 
 
-def draw_board():
+def draw_board(jogo):
     for i in range(32):
         column = i % 4
         row = i // 4
         if row % 2 == 0:
-            pygame.draw.rect(screen, 'light gray', [
+            pygame.draw.rect(jogo.tela, 'light gray', [
                              600 - (column * 200), row * 100, 100, 100])
         else:
-            pygame.draw.rect(screen, 'light gray', [
+            pygame.draw.rect(jogo.tela, 'light gray', [
                              700 - (column * 200), row * 100, 100, 100])
-        pygame.draw.rect(screen, 'gray', [0, 800, WIDTH, 100])
-        pygame.draw.rect(screen, 'gold', [0, 800, WIDTH, 100], 5)
-        pygame.draw.rect(screen, 'gold', [800, 0, 200, HEIGHT], 5)
+        pygame.draw.rect(jogo.tela, 'gray', [0, 800, jogo.comprimento, 100])
+        pygame.draw.rect(jogo.tela, 'gold', [0, 800, jogo.comprimento, 100], 5)
+        pygame.draw.rect(jogo.tela, 'gold', [800, 0, 200, jogo.altura], 5)
         status_text = ['White: Select a Piece to Move!', 'White: Select a Destination!',
                        'Black: Select a Piece to Move!', 'Black: Select a Destination!']
-        screen.blit(big_font.render(
-            status_text[turn_step], True, 'black'), (20, 820))
+        jogo.tela.blit(jogo.fonte_grande.render(
+            status_text[jogo.turno], True, 'negras'), (20, 820))
         for i in range(9):
-            pygame.draw.line(screen, 'black', (0, 100 * i), (800, 100 * i), 2)
-            pygame.draw.line(screen, 'black', (100 * i, 0), (100 * i, 800), 2)
-        screen.blit(medium_font.render('FORFEIT', True, 'black'), (810, 830))
+            pygame.draw.line(jogo.tela, 'negras',
+                             (0, 100 * i), (800, 100 * i), 2)
+            pygame.draw.line(jogo.tela, 'negras',
+                             (100 * i, 0), (100 * i, 800), 2)
+        jogo.tela.blit(jogo.fonte_media.render(
+            'FORFEIT', True, 'negras'), (810, 830))
 
 
 # draw pieces onto board
-def draw_pieces():
-    for i in range(len(white_pieces)):
-        index = piece_list.index(white_pieces[i])
-        if white_pieces[i] == 'pawn':
-            screen.blit(
-                white_pawn, (white_locations[i][0] * 100 + 22, white_locations[i][1] * 100 + 30))
+def draw_pieces(jogo):
+    for i in range(len(jogo.brancas)):
+        index = jogo.pecas.index(jogo.brancas[i])
+        if jogo.brancas[i] == 'peao':
+            jogo.tela.blit(
+                jogo.imagens_brancas[0], (jogo.loc_brancas[i][0] * 100 + 22, jogo.loc_brancas[i][1] * 100 + 30))
         else:
-            screen.blit(white_images[index], (white_locations[i]
-                        [0] * 100 + 10, white_locations[i][1] * 100 + 10))
-        if turn_step < 2:
-            if selection == i:
-                pygame.draw.rect(screen, 'red', [white_locations[i][0] * 100 + 1, white_locations[i][1] * 100 + 1,
-                                                 100, 100], 2)
+            jogo.tela.blit(jogo.imagens_brancas[index], (jogo.loc_brancas[i]
+                                                         [0] * 100 + 10, jogo.loc_brancas[i][1] * 100 + 10))
+        if jogo.turno < 2:
+            if jogo.selecao == i:
+                pygame.draw.rect(jogo.tela, 'red', [jogo.loc_brancas[i][0] * 100 + 1, jogo.loc_brancas[i][1] * 100 + 1,
+                                                    100, 100], 2)
 
-    for i in range(len(black_pieces)):
-        index = piece_list.index(black_pieces[i])
-        if black_pieces[i] == 'pawn':
-            screen.blit(
-                black_pawn, (black_locations[i][0] * 100 + 22, black_locations[i][1] * 100 + 30))
+    for i in range(len(jogo.negras)):
+        index = jogo.pecas.index(jogo.negras[i])
+        if jogo.negras[i] == 'peao':
+            jogo.tela.blit(
+                jogo.imagens_negras[0], (jogo.loc_negras[i][0] * 100 + 22, jogo.loc_negras[i][1] * 100 + 30))
         else:
-            screen.blit(black_images[index], (black_locations[i]
-                        [0] * 100 + 10, black_locations[i][1] * 100 + 10))
-        if turn_step >= 2:
-            if selection == i:
-                pygame.draw.rect(screen, 'blue', [black_locations[i][0] * 100 + 1, black_locations[i][1] * 100 + 1,
-                                                  100, 100], 2)
+            jogo.tela.blit(jogo.imagens_negras[index], (jogo.loc_negras[i]
+                                                        [0] * 100 + 10, jogo.loc_negras[i][1] * 100 + 10))
+        if jogo.turno >= 2:
+            if jogo.selecao == i:
+                pygame.draw.rect(jogo.tela, 'blue', [jogo.loc_negras[i][0] * 100 + 1, jogo.loc_negras[i][1] * 100 + 1,
+                                                     100, 100], 2)
 
 
 # function to check all pieces valid options on board
-def check_options(pecas, loc, turno):
+def check_options(pecas, loc, jogo, turno):
     moves_list = []
     all_moves_list = []
     for i in range((len(pecas))):
         location = loc[i]
         piece = pecas[i]
         if piece == 'peao':
-            moves_list = check_pawn(location, turno)
+            moves_list = check_pawn(location, turno, jogo)
         elif piece == 'torre':
-            moves_list = check_rook(location, turno)
+            moves_list = check_rook(location, turno, jogo)
         elif piece == 'cavalo':
-            moves_list = check_knight(location, turno)
+            moves_list = check_knight(location, turno, jogo)
         elif piece == 'bispo':
-            moves_list = check_bishop(location, turno)
+            moves_list = check_bishop(location, turno, jogo)
         elif piece == 'rainha':
-            moves_list = check_queen(location, turno)
+            moves_list = check_queen(location, turno, jogo)
         elif piece == 'rei':
-            moves_list = check_king(location, turno)
+            moves_list = check_king(location, turno, jogo)
         all_moves_list.append(moves_list)
 
     return all_moves_list
 
 
 # check king valid moves
-def check_king(position, color):
+def check_king(position, color, jogo):
     moves_list = []
-    if color == 'white':
-        enemies_list = black_locations
-        friends_list = white_locations
+    if color == 'brancas':
+        enemies_list = jogo.loc_negras
+        friends_list = jogo.loc_brancas
     else:
-        friends_list = black_locations
-        enemies_list = white_locations
+        friends_list = jogo.loc_negras
+        enemies_list = jogo.loc_brancas
     # 8 squares to check for kings, they can go one square any direction
     targets = [(1, 0), (1, 1), (1, -1), (-1, 0),
                (-1, 1), (-1, -1), (0, 1), (0, -1)]
@@ -106,23 +109,23 @@ def check_king(position, color):
 
 
 # check queen valid moves
-def check_queen(position, color):
-    moves_list = check_bishop(position, color)
-    second_list = check_rook(position, color)
+def check_queen(position, color, jogo):
+    moves_list = check_bishop(position, color, jogo)
+    second_list = check_rook(position, color, jogo)
     for i in range(len(second_list)):
         moves_list.append(second_list[i])
     return moves_list
 
 
 # check bishop moves
-def check_bishop(position, color):
+def check_bishop(position, color, jogo):
     moves_list = []
     if color == 'white':
-        enemies_list = black_locations
-        friends_list = white_locations
+        enemies_list = jogo.loc_negras
+        friends_list = jogo.loc_brancas
     else:
-        friends_list = black_locations
-        enemies_list = white_locations
+        friends_list = jogo.loc_negras
+        enemies_list = jogo.loc_brancas
     for i in range(4):  # up-right, up-left, down-right, down-left
         path = True
         chain = 1
@@ -152,14 +155,14 @@ def check_bishop(position, color):
 
 
 # check rook moves
-def check_rook(position, color):
+def check_rook(position, color, jogo):
     moves_list = []
     if color == 'white':
-        enemies_list = black_locations
-        friends_list = white_locations
+        enemies_list = jogo.loc_negras
+        friends_list = jogo.loc_brancas
     else:
-        friends_list = black_locations
-        enemies_list = white_locations
+        friends_list = jogo.loc_negras
+        enemies_list = jogo.loc_brancas
     for i in range(4):  # down, up, right, left
         path = True
         chain = 1
@@ -189,42 +192,42 @@ def check_rook(position, color):
 
 
 # check valid pawn moves
-def check_pawn(position, color):
+def check_pawn(position, color, jogo):
     moves_list = []
     if color == 'white':
-        if (position[0], position[1] + 1) not in white_locations and \
-                (position[0], position[1] + 1) not in black_locations and position[1] < 7:
+        if (position[0], position[1] + 1) not in jogo.loc_brancas and \
+                (position[0], position[1] + 1) not in jogo.loc_negras and position[1] < 7:
             moves_list.append((position[0], position[1] + 1))
-        if (position[0], position[1] + 2) not in white_locations and \
-                (position[0], position[1] + 2) not in black_locations and position[1] == 1:
+        if (position[0], position[1] + 2) not in jogo.loc_brancas and \
+                (position[0], position[1] + 2) not in jogo.loc_negras and position[1] == 1:
             moves_list.append((position[0], position[1] + 2))
-        if (position[0] + 1, position[1] + 1) in black_locations:
+        if (position[0] + 1, position[1] + 1) in jogo.loc_negras:
             moves_list.append((position[0] + 1, position[1] + 1))
-        if (position[0] - 1, position[1] + 1) in black_locations:
+        if (position[0] - 1, position[1] + 1) in jogo.loc_negras:
             moves_list.append((position[0] - 1, position[1] + 1))
     else:
-        if (position[0], position[1] - 1) not in white_locations and \
-                (position[0], position[1] - 1) not in black_locations and position[1] > 0:
+        if (position[0], position[1] - 1) not in jogo.loc_brancas and \
+                (position[0], position[1] - 1) not in jogo.loc_negras and position[1] > 0:
             moves_list.append((position[0], position[1] - 1))
-        if (position[0], position[1] - 2) not in white_locations and \
-                (position[0], position[1] - 2) not in black_locations and position[1] == 6:
+        if (position[0], position[1] - 2) not in jogo.loc_brancas and \
+                (position[0], position[1] - 2) not in jogo.loc_negras and position[1] == 6:
             moves_list.append((position[0], position[1] - 2))
-        if (position[0] + 1, position[1] - 1) in white_locations:
+        if (position[0] + 1, position[1] - 1) in jogo.loc_brancas:
             moves_list.append((position[0] + 1, position[1] - 1))
-        if (position[0] - 1, position[1] - 1) in white_locations:
+        if (position[0] - 1, position[1] - 1) in jogo.loc_brancas:
             moves_list.append((position[0] - 1, position[1] - 1))
     return moves_list
 
 
 # check valid knight moves
-def check_knight(position, color):
+def check_knight(position, color, jogo):
     moves_list = []
     if color == 'white':
-        enemies_list = black_locations
-        friends_list = white_locations
+        enemies_list = jogo.loc_negras
+        friends_list = jogo.loc_brancas
     else:
-        friends_list = black_locations
-        enemies_list = white_locations
+        friends_list = jogo.loc_negras
+        enemies_list = jogo.loc_brancas
     # 8 squares to check for knights, they can go two squares in one direction and one in another
     targets = [(1, 2), (1, -2), (2, 1), (2, -1),
                (-1, 2), (-1, -2), (-2, 1), (-2, -1)]
@@ -236,66 +239,65 @@ def check_knight(position, color):
 
 
 # check for valid moves for just selected piece
-def check_valid_moves():
-    if turn_step < 2:
-        options_list = white_options
+def check_valid_moves(opcoes_negras, opcoes_brancas, jogo):
+    if jogo.turno < 2:
+        options_list = opcoes_brancas
     else:
-        options_list = black_options
-    valid_options = options_list[selection]
+        options_list = opcoes_negras
+    valid_options = options_list[jogo.selecao]
     return valid_options
 
 
-# draw valid moves on screen
-def draw_valid(moves):
-    if turn_step < 2:
+def draw_valid(moves, jogo):
+    if jogo.turno < 2:
         color = 'red'
     else:
         color = 'blue'
     for i in range(len(moves)):
         pygame.draw.circle(
-            screen, color, (moves[i][0] * 100 + 50, moves[i][1] * 100 + 50), 5)
+            jogo.tela, color, (moves[i][0] * 100 + 50, moves[i][1] * 100 + 50), 5)
 
 
-# draw captured pieces on side of screen
-def draw_captured():
-    for i in range(len(captured_pieces_white)):
-        captured_piece = captured_pieces_white[i]
-        index = piece_list.index(captured_piece)
-        screen.blit(small_black_images[index], (825, 5 + 50 * i))
-    for i in range(len(captured_pieces_black)):
-        captured_piece = captured_pieces_black[i]
-        index = piece_list.index(captured_piece)
-        screen.blit(small_white_images[index], (925, 5 + 50 * i))
+# draw captured pieces on side of jogo.tela
+def draw_captured(jogo):
+    for i in range(len(jogo.cap_brancas)):
+        captured_piece = jogo.cap_brancas[i]
+        index = jogo.pecas.index(captured_piece)
+        jogo.tela.blit(jogo.imagens_negras_p[index], (825, 5 + 50 * i))
+    for i in range(len(jogo.cap_negras)):
+        captured_piece = jogo.cap_negras[i]
+        index = jogo.pecas.index(captured_piece)
+        jogo.tela.blit(jogo.imagens_brancas_p[index], (925, 5 + 50 * i))
 
 
 # draw a flashing square around king if in check
-def draw_check():
-    if turn_step < 2:
-        if 'king' in white_pieces:
-            king_index = white_pieces.index('king')
-            king_location = white_locations[king_index]
-            for i in range(len(black_options)):
-                if king_location in black_options[i]:
-                    if counter < 15:
-                        pygame.draw.rect(screen, 'dark red', [white_locations[king_index][0] * 100 + 1,
-                                                              white_locations[king_index][1] * 100 + 1, 100, 100], 5)
+def draw_check(jogo, opcoes_negras, opcoes_brancas):
+    if jogo.turno < 2:
+        if 'king' in jogo.brancas:
+            king_index = jogo.brancas.index('king')
+            king_location = jogo.loc_brancas[king_index]
+            for i in range(len(opcoes_negras)):
+                if king_location in opcoes_negras[i]:
+                    if jogo.contador < 15:
+                        pygame.draw.rect(jogo.tela, 'dark red', [jogo.loc_brancas[king_index][0] * 100 + 1,
+                                                                 jogo.loc_brancas[king_index][1] * 100 + 1, 100, 100], 5)
     else:
-        if 'king' in black_pieces:
-            king_index = black_pieces.index('king')
-            king_location = black_locations[king_index]
-            for i in range(len(white_options)):
-                if king_location in white_options[i]:
-                    if counter < 15:
-                        pygame.draw.rect(screen, 'dark blue', [black_locations[king_index][0] * 100 + 1,
-                                                               black_locations[king_index][1] * 100 + 1, 100, 100], 5)
+        if 'king' in jogo.negras:
+            king_index = jogo.negras.index('king')
+            king_location = jogo.loc_negras[king_index]
+            for i in range(len(opcoes_brancas)):
+                if king_location in opcoes_brancas[i]:
+                    if jogo.contador < 15:
+                        pygame.draw.rect(jogo.tela, 'dark blue', [jogo.loc_negras[king_index][0] * 100 + 1,
+                                                                  jogo.loc_negras[king_index][1] * 100 + 1, 100, 100], 5)
 
 
-def draw_game_over():
-    pygame.draw.rect(screen, 'black', [200, 200, 400, 70])
-    screen.blit(font.render(
-        f'{winner} won the game!', True, 'white'), (210, 210))
-    screen.blit(font.render(f'Press ENTER to Restart!',
-                True, 'white'), (210, 240))
+def draw_game_over(jogo):
+    pygame.draw.rect(jogo.tela, 'negras', [200, 200, 400, 70])
+    jogo.tela.blit(jogo.fonte.render(
+        f'{jogo.vencedor} won the game!', True, 'white'), (210, 210))
+    jogo.tela.blit(jogo.fonte.render(f'Press ENTER to Restart!',
+                                     True, 'white'), (210, 240))
 
 
 def fim_jogo():

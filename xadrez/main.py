@@ -18,7 +18,6 @@ while rodando:
 
     mostra_tabuleiro(jogo)
     mostra_pecas(jogo)
-    mostra_capturadas(jogo)
     mostra_cheque(jogo, opcoes_negras, opcoes_brancas)
 
     if jogo.selecao != 100:
@@ -39,8 +38,6 @@ while rodando:
             # print(clicou)
 
             if jogo.turno <= 1:
-                if clicou == (11, 9) or clicou == (12, 9) or clicou == (13, 9) or clicou == (14, 9):
-                    jogo.vencedor = 'negras'
 
                 if clicou in jogo.loc_brancas:
                     jogo.selecao = jogo.loc_brancas.index(clicou)
@@ -70,8 +67,7 @@ while rodando:
                     jogo.movimentos_validos = []
 
             if jogo.turno > 1:
-                if clicou == (11, 9) or clicou == (12, 9) or clicou == (13, 9) or clicou == (14, 9):
-                    jogo.vencedor = 'brancas'
+
                 if clicou in jogo.loc_negras:
                     jogo.selecao = jogo.loc_negras.index(clicou)
                     if jogo.turno == 2:

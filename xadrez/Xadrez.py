@@ -7,7 +7,6 @@ class Xadrez:
     tela = 0
     fonte = 0
     fonte_media = 0
-    fonte_grande = 0
     tempo = 0
     fps = 0
     brancas = 0
@@ -31,14 +30,13 @@ class Xadrez:
     fim = 0
 
     def __init__(self):
-        self.comprimento = 1000
+        self.comprimento = 480
         self.altura = 600
         self.tela = pygame.display.set_mode((self.comprimento, self.altura))
         pygame.display.set_caption('Xadrez 1v1')
 
         self.fonte = pygame.font.Font('freesansbold.ttf', 20)
         self.fonte_media = pygame.font.Font('freesansbold.ttf', 40)
-        self.fonte_grande = pygame.font.Font('freesansbold.ttf', 50)
         self.tempo = pygame.time.Clock()
         self.fps = 60
         self.brancas = ['torre', 'cavalo', 'bispo', 'rei', 'rainha', 'bispo', 'cavalo', 'torre',

@@ -21,20 +21,21 @@ def mostra_tabuleiro(jogo: xd.Xadrez):
             pygame.draw.rect(jogo.tela, 'light gray', [
                              60+(coluna * 120), linha * 60, 60, 60])
 
-        texto = ['Brancas!', 'Brancas!',
-                 'Negras!', 'Negras!']
+        texto = ['Brancas', 'Brancas',
+                 'Negras', 'Negras']
 
-        jogo.tela.blit(jogo.fonte_media.render(
-            texto[jogo.turno], True, 'black'), (20, 550))
+        if jogo.turno < 2:
+            jogo.tela.blit(jogo.fonte_media.render(
+                texto[jogo.turno], True, 'white'), (160, 530))
+        else:
+            jogo.tela.blit(jogo.fonte_media.render(
+                texto[jogo.turno], True, 'black'), (160, 530))
 
         for i in range(9):
             pygame.draw.line(jogo.tela, 'black',
                              (0, 60 * i), (480, 60 * i), 2)
             pygame.draw.line(jogo.tela, 'black',
                              (60 * i, 0), (60 * i, 480), 2)
-
-        jogo.tela.blit(jogo.fonte_media.render(
-            'Abandonar', True, 'black'), (670, 550))
 
 
 def mostra_pecas(jogo: xd.Xadrez):
@@ -48,7 +49,7 @@ def mostra_pecas(jogo: xd.Xadrez):
                                                          [0] * 60)+10, (jogo.loc_brancas[i][1] * 60)+10))
         if jogo.turno < 2:
             if jogo.selecao == i:
-                pygame.draw.rect(jogo.tela, 'red', [
+                pygame.draw.rect(jogo.tela, 'blue', [
                                  (jogo.loc_brancas[i][0] * 60)+2, (jogo.loc_brancas[i][1] * 60)+2, 60, 60], 2)
 
     for i in range(len(jogo.negras)):
@@ -58,7 +59,7 @@ def mostra_pecas(jogo: xd.Xadrez):
                 jogo.imagens_negras[0], ((jogo.loc_negras[i][0] * 60)+10, (jogo.loc_negras[i][1] * 60)+10))
         else:
             jogo.tela.blit(jogo.imagens_negras[index], ((jogo.loc_negras[i]
-                                                        [0] * 60)+10, (jogo.loc_negras[i][1] * 60)+5))
+                                                        [0] * 60)+10, (jogo.loc_negras[i][1] * 60)+10))
         if jogo.turno >= 2:
             if jogo.selecao == i:
                 pygame.draw.rect(jogo.tela, 'blue', [
@@ -254,23 +255,12 @@ def verificar_mov_possiveis(opcoes_negras, opcoes_brancas, jogo: xd.Xadrez):
 
 def mostra_mov_possiveis(moves, jogo: xd.Xadrez):
     if jogo.turno < 2:
-        turno = 'red'
+        turno = 'blue'
     else:
         turno = 'blue'
     for i in range(len(moves)):
         pygame.draw.circle(
             jogo.tela, turno, (moves[i][0] * 60+30, moves[i][1] * 60+30), 5)
-
-
-def mostra_capturadas(jogo: xd.Xadrez):
-    for i in range(len(jogo.cap_brancas)):
-        peca_capturada = jogo.cap_brancas[i]
-        index = jogo.pecas.index(peca_capturada)
-        jogo.tela.blit(jogo.imagens_negras_p[index], (600, 30 * i + 10))
-    for i in range(len(jogo.cap_negras)):
-        peca_capturada = jogo.cap_negras[i]
-        index = jogo.pecas.index(peca_capturada)
-        jogo.tela.blit(jogo.imagens_brancas_p[index], (500, 30 * i+10))
 
 
 def mostra_cheque(jogo: xd.Xadrez, opcoes_negras, opcoes_brancas):
@@ -281,8 +271,8 @@ def mostra_cheque(jogo: xd.Xadrez, opcoes_negras, opcoes_brancas):
             for i in range(len(opcoes_negras)):
                 if loc_rei in opcoes_negras[i]:
                     if jogo.contador < 15:
-                        pygame.draw.rect(jogo.tela, 'dark red', [jogo.loc_brancas[index_rei][0] * 60 + 1,
-                                                                 jogo.loc_brancas[index_rei][1] * 60 + 1, 60, 60], 5)
+                        pygame.draw.rect(jogo.tela, 'red', [jogo.loc_brancas[index_rei][0] * 60 + 1,
+                                                            jogo.loc_brancas[index_rei][1] * 60 + 1, 60, 60], 5)
     else:
         if 'rei' in jogo.negras:
             index_rei = jogo.negras.index('rei')
@@ -290,16 +280,24 @@ def mostra_cheque(jogo: xd.Xadrez, opcoes_negras, opcoes_brancas):
             for i in range(len(opcoes_brancas)):
                 if loc_rei in opcoes_brancas[i]:
                     if jogo.contador < 15:
-                        pygame.draw.rect(jogo.tela, 'dark blue', [jogo.loc_negras[index_rei][0] * 60 + 1,
-                                                                  jogo.loc_negras[index_rei][1] * 60 + 1, 60, 60], 5)
+                        pygame.draw.rect(jogo.tela, 'red', [jogo.loc_negras[index_rei][0] * 60 + 1,
+                                                            jogo.loc_negras[index_rei][1] * 60 + 1, 60, 60], 5)
 
 
 def mostra_final(jogo: xd.Xadrez):
-    pygame.draw.rect(jogo.tela, 'black', [200, 200, 400, 70])
-    jogo.tela.blit(jogo.fonte.render(
-        f'{jogo.vencedor} venceu!', True, 'white'), (210, 210))
-    jogo.tela.blit(jogo.fonte.render(f'Aperte ENTER para recomeçar!',
-                                     True, 'white'), (210, 240))
+    pygame.draw.rect(jogo.tela, 'red', [90, 200, 340, 70])
+
+    if jogo.vencedor == 'brancas':
+        jogo.tela.blit(jogo.fonte.render(
+            f'{jogo.vencedor} venceu!', True, 'white'), (100, 210))
+        jogo.tela.blit(jogo.fonte.render(
+            f'Aperte ENTER para recomeçar!', True, 'white'), (100, 240))
+
+    elif jogo.vencedor == 'negras':
+        jogo.tela.blit(jogo.fonte.render(
+            f'{jogo.vencedor} venceu!', True, 'black'), (100, 210))
+        jogo.tela.blit(jogo.fonte.render(
+            f'Aperte ENTER para recomeçar!', True, 'black'), (100, 240))
 
 
 def fim_jogo():

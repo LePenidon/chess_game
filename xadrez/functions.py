@@ -10,21 +10,22 @@ def inicio_jogo():
     return jogo
 
 
-def draw_board(jogo: xd.Xadrez):
+def mostra_tabuleiro(jogo: xd.Xadrez):
     for i in range(32):
-        column = i % 4
-        row = i // 4
-        if row % 2 == 0:
+        coluna = i % 4
+        linha = i // 4
+        if linha % 2 == 0:
             pygame.draw.rect(jogo.tela, 'light gray', [
-                             (column * 120), row * 60, 60, 60])
+                             (coluna * 120), linha * 60, 60, 60])
         else:
             pygame.draw.rect(jogo.tela, 'light gray', [
-                             60+(column * 120), row * 60, 60, 60])
+                             60+(coluna * 120), linha * 60, 60, 60])
 
-        status_text = ['Brancas!', 'Brancas!',
-                       'Negras!', 'Negras!']
+        texto = ['Brancas!', 'Brancas!',
+                 'Negras!', 'Negras!']
+
         jogo.tela.blit(jogo.fonte_media.render(
-            status_text[jogo.turno], True, 'black'), (20, 550))
+            texto[jogo.turno], True, 'black'), (20, 550))
 
         for i in range(9):
             pygame.draw.line(jogo.tela, 'black',
@@ -33,10 +34,10 @@ def draw_board(jogo: xd.Xadrez):
                              (60 * i, 0), (60 * i, 480), 2)
 
         jogo.tela.blit(jogo.fonte_media.render(
-            'Abandonar', True, 'black'), (600, 550))
+            'Abandonar', True, 'black'), (670, 550))
 
 
-def draw_pieces(jogo: xd.Xadrez):
+def mostra_pecas(jogo: xd.Xadrez):
     for i in range(len(jogo.brancas)):
         index = jogo.pecas.index(jogo.brancas[i])
         if jogo.brancas[i] == 'peao':
@@ -54,7 +55,7 @@ def draw_pieces(jogo: xd.Xadrez):
         index = jogo.pecas.index(jogo.negras[i])
         if jogo.negras[i] == 'peao':
             jogo.tela.blit(
-                jogo.imagens_negras[0], ((jogo.loc_negras[i][0] * 60)+10, (jogo.loc_negras[i][1] * 60)+5))
+                jogo.imagens_negras[0], ((jogo.loc_negras[i][0] * 60)+10, (jogo.loc_negras[i][1] * 60)+10))
         else:
             jogo.tela.blit(jogo.imagens_negras[index], ((jogo.loc_negras[i]
                                                         [0] * 60)+10, (jogo.loc_negras[i][1] * 60)+5))
@@ -64,70 +65,73 @@ def draw_pieces(jogo: xd.Xadrez):
                                  (jogo.loc_negras[i][0] * 60)+2, (jogo.loc_negras[i][1] * 60)+2, 60, 60], 2)
 
 
-# function to check all pieces valid options on board
-def check_options(pecas, loc, jogo: xd.Xadrez, turno):
-    moves_list = []
-    all_moves_list = []
+def verifica_movimentos(pecas, localizacoes, jogo: xd.Xadrez, turno):
+    movimentos = []
+    todos_movimentos = []
     for i in range((len(pecas))):
-        location = loc[i]
-        piece = pecas[i]
-        if piece == 'peao':
-            moves_list = check_pawn(location, turno, jogo)
-        elif piece == 'torre':
-            moves_list = check_rook(location, turno, jogo)
-        elif piece == 'cavalo':
-            moves_list = check_knight(location, turno, jogo)
-        elif piece == 'bispo':
-            moves_list = check_bishop(location, turno, jogo)
-        elif piece == 'rainha':
-            moves_list = check_queen(location, turno, jogo)
-        elif piece == 'rei':
-            moves_list = check_king(location, turno, jogo)
-        all_moves_list.append(moves_list)
+        loc = localizacoes[i]
+        peca = pecas[i]
+        if peca == 'peao':
+            movimentos = verifica_peao(loc, turno, jogo)
+        elif peca == 'torre':
+            movimentos = verifica_torre(loc, turno, jogo)
+        elif peca == 'cavalo':
+            movimentos = verifica_cavalo(loc, turno, jogo)
+        elif peca == 'bispo':
+            movimentos = verifica_bispo(loc, turno, jogo)
+        elif peca == 'rainha':
+            movimentos = verifica_rainha(loc, turno, jogo)
+        elif peca == 'rei':
+            movimentos = verifica_rei(loc, turno, jogo)
 
-    return all_moves_list
+        todos_movimentos.append(movimentos)
+
+    return todos_movimentos
 
 
-# check king valid moves
-def check_king(position, color, jogo: xd.Xadrez):
-    moves_list = []
-    if color == 'brancas':
-        enemies_list = jogo.loc_negras
-        friends_list = jogo.loc_brancas
+def verifica_rei(posicao, turno, jogo: xd.Xadrez):
+    movimentos = []
+    if turno == 'brancas':
+        pecas_da_cor = jogo.loc_brancas
     else:
-        friends_list = jogo.loc_negras
-        enemies_list = jogo.loc_brancas
-    # 8 squares to check for kings, they can go one square any direction
-    targets = [(1, 0), (1, 1), (1, -1), (-1, 0),
-               (-1, 1), (-1, -1), (0, 1), (0, -1)]
+        pecas_da_cor = jogo.loc_negras
+
+    anda = [(1, 0), (1, 1), (1, -1), (-1, 0),
+            (-1, 1), (-1, -1), (0, 1), (0, -1)]
+
     for i in range(8):
-        target = (position[0] + targets[i][0], position[1] + targets[i][1])
-        if target not in friends_list and 0 <= target[0] <= 7 and 0 <= target[1] <= 7:
-            moves_list.append(target)
-    return moves_list
+        mov_possivel = (posicao[0] + anda[i][0], posicao[1] + anda[i][1])
+
+        if mov_possivel not in pecas_da_cor and 0 <= mov_possivel[0] <= 7 and 0 <= mov_possivel[1] <= 7:
+
+            movimentos.append(mov_possivel)
+
+    return movimentos
 
 
-# check queen valid moves
-def check_queen(position, color, jogo: xd.Xadrez):
-    moves_list = check_bishop(position, color, jogo)
-    second_list = check_rook(position, color, jogo)
-    for i in range(len(second_list)):
-        moves_list.append(second_list[i])
-    return moves_list
+def verifica_rainha(posicao, turno, jogo: xd.Xadrez):
+    movimentos_bispo = verifica_bispo(posicao, turno, jogo)
+    movimentos_torre = verifica_torre(posicao, turno, jogo)
+
+    for i in range(len(movimentos_torre)):
+        movimentos_bispo.append(movimentos_torre[i])
+
+    return movimentos_bispo
 
 
-# check bishop moves
-def check_bishop(position, color, jogo: xd.Xadrez):
-    moves_list = []
-    if color == 'brancas':
-        enemies_list = jogo.loc_negras
-        friends_list = jogo.loc_brancas
+def verifica_bispo(posicao, turno, jogo: xd.Xadrez):
+    movimentos = []
+    if turno == 'brancas':
+        pecas_outra_cor = jogo.loc_negras
+        pecas_da_cor = jogo.loc_brancas
     else:
-        friends_list = jogo.loc_negras
-        enemies_list = jogo.loc_brancas
-    for i in range(4):  # up-right, up-left, down-right, down-left
-        path = True
-        chain = 1
+        pecas_da_cor = jogo.loc_negras
+        pecas_outra_cor = jogo.loc_brancas
+
+    # up-right, up-left, down-right, down-left
+    for i in range(4):
+        passa = True
+        sequencia = 1
         if i == 0:
             x = 1
             y = -1
@@ -140,31 +144,33 @@ def check_bishop(position, color, jogo: xd.Xadrez):
         else:
             x = -1
             y = 1
-        while path:
-            if (position[0] + (chain * x), position[1] + (chain * y)) not in friends_list and \
-                    0 <= position[0] + (chain * x) <= 7 and 0 <= position[1] + (chain * y) <= 7:
-                moves_list.append(
-                    (position[0] + (chain * x), position[1] + (chain * y)))
-                if (position[0] + (chain * x), position[1] + (chain * y)) in enemies_list:
-                    path = False
-                chain += 1
+
+        while passa:
+            if (posicao[0] + (sequencia * x), posicao[1] + (sequencia * y)) not in pecas_da_cor and \
+                    0 <= posicao[0] + (sequencia * x) <= 7 and 0 <= posicao[1] + (sequencia * y) <= 7:
+                movimentos.append(
+                    (posicao[0] + (sequencia * x), posicao[1] + (sequencia * y)))
+
+                if (posicao[0] + (sequencia * x), posicao[1] + (sequencia * y)) in pecas_outra_cor:
+                    passa = False
+                sequencia += 1
             else:
-                path = False
-    return moves_list
+                passa = False
+
+    return movimentos
 
 
-# check rook moves
-def check_rook(position, color, jogo: xd.Xadrez):
-    moves_list = []
-    if color == 'brancas':
-        enemies_list = jogo.loc_negras
-        friends_list = jogo.loc_brancas
+def verifica_torre(posicao, turno, jogo: xd.Xadrez):
+    movimentos = []
+    if turno == 'brancas':
+        pecas_outra_cor = jogo.loc_negras
+        pecas_da_cor = jogo.loc_brancas
     else:
-        friends_list = jogo.loc_negras
-        enemies_list = jogo.loc_brancas
+        pecas_da_cor = jogo.loc_negras
+        pecas_outra_cor = jogo.loc_brancas
     for i in range(4):  # down, up, right, left
-        path = True
-        chain = 1
+        passa = True
+        sequencia = 1
         if i == 0:
             x = 0
             y = 1
@@ -177,126 +183,122 @@ def check_rook(position, color, jogo: xd.Xadrez):
         else:
             x = -1
             y = 0
-        while path:
-            if (position[0] + (chain * x), position[1] + (chain * y)) not in friends_list and \
-                    0 <= position[0] + (chain * x) <= 7 and 0 <= position[1] + (chain * y) <= 7:
-                moves_list.append(
-                    (position[0] + (chain * x), position[1] + (chain * y)))
-                if (position[0] + (chain * x), position[1] + (chain * y)) in enemies_list:
-                    path = False
-                chain += 1
+        while passa:
+            if (posicao[0] + (sequencia * x), posicao[1] + (sequencia * y)) not in pecas_da_cor and \
+                    0 <= posicao[0] + (sequencia * x) <= 7 and 0 <= posicao[1] + (sequencia * y) <= 7:
+                movimentos.append(
+                    (posicao[0] + (sequencia * x), posicao[1] + (sequencia * y)))
+                if (posicao[0] + (sequencia * x), posicao[1] + (sequencia * y)) in pecas_outra_cor:
+                    passa = False
+                sequencia += 1
             else:
-                path = False
-    return moves_list
+                passa = False
+    return movimentos
 
 
-# check valid pawn moves
-def check_pawn(position, color, jogo: xd.Xadrez):
-    moves_list = []
-    if color == 'brancas':
-        if (position[0], position[1] + 1) not in jogo.loc_brancas and \
-                (position[0], position[1] + 1) not in jogo.loc_negras and position[1] < 7:
-            moves_list.append((position[0], position[1] + 1))
-        if (position[0], position[1] + 2) not in jogo.loc_brancas and \
-                (position[0], position[1] + 2) not in jogo.loc_negras and position[1] == 1:
-            moves_list.append((position[0], position[1] + 2))
-        if (position[0] + 1, position[1] + 1) in jogo.loc_negras:
-            moves_list.append((position[0] + 1, position[1] + 1))
-        if (position[0] - 1, position[1] + 1) in jogo.loc_negras:
-            moves_list.append((position[0] - 1, position[1] + 1))
+def verifica_peao(posicao, turno, jogo: xd.Xadrez):
+    movimentos = []
+    if turno == 'brancas':
+        if (posicao[0], posicao[1] + 1) not in jogo.loc_brancas and \
+                (posicao[0], posicao[1] + 1) not in jogo.loc_negras and posicao[1] < 7:
+            movimentos.append((posicao[0], posicao[1] + 1))
+        if (posicao[0], posicao[1] + 2) not in jogo.loc_brancas and \
+                (posicao[0], posicao[1] + 2) not in jogo.loc_negras and posicao[1] == 1:
+            movimentos.append((posicao[0], posicao[1] + 2))
+        if (posicao[0] + 1, posicao[1] + 1) in jogo.loc_negras:
+            movimentos.append((posicao[0] + 1, posicao[1] + 1))
+        if (posicao[0] - 1, posicao[1] + 1) in jogo.loc_negras:
+            movimentos.append((posicao[0] - 1, posicao[1] + 1))
     else:
-        if (position[0], position[1] - 1) not in jogo.loc_brancas and \
-                (position[0], position[1] - 1) not in jogo.loc_negras and position[1] > 0:
-            moves_list.append((position[0], position[1] - 1))
-        if (position[0], position[1] - 2) not in jogo.loc_brancas and \
-                (position[0], position[1] - 2) not in jogo.loc_negras and position[1] == 6:
-            moves_list.append((position[0], position[1] - 2))
-        if (position[0] + 1, position[1] - 1) in jogo.loc_brancas:
-            moves_list.append((position[0] + 1, position[1] - 1))
-        if (position[0] - 1, position[1] - 1) in jogo.loc_brancas:
-            moves_list.append((position[0] - 1, position[1] - 1))
-    return moves_list
+        if (posicao[0], posicao[1] - 1) not in jogo.loc_brancas and \
+                (posicao[0], posicao[1] - 1) not in jogo.loc_negras and posicao[1] > 0:
+            movimentos.append((posicao[0], posicao[1] - 1))
+        if (posicao[0], posicao[1] - 2) not in jogo.loc_brancas and \
+                (posicao[0], posicao[1] - 2) not in jogo.loc_negras and posicao[1] == 6:
+            movimentos.append((posicao[0], posicao[1] - 2))
+        if (posicao[0] + 1, posicao[1] - 1) in jogo.loc_brancas:
+            movimentos.append((posicao[0] + 1, posicao[1] - 1))
+        if (posicao[0] - 1, posicao[1] - 1) in jogo.loc_brancas:
+            movimentos.append((posicao[0] - 1, posicao[1] - 1))
+
+    return movimentos
 
 
-# check valid knight moves
-def check_knight(position, color, jogo: xd.Xadrez):
-    moves_list = []
-    if color == 'brancas':
-        enemies_list = jogo.loc_negras
-        friends_list = jogo.loc_brancas
+def verifica_cavalo(posicao, turno, jogo: xd.Xadrez):
+    movimentos = []
+    if turno == 'brancas':
+        pecas_da_cor = jogo.loc_brancas
     else:
-        friends_list = jogo.loc_negras
-        enemies_list = jogo.loc_brancas
+        pecas_da_cor = jogo.loc_negras
+
     # 8 squares to check for knights, they can go two squares in one direction and one in another
-    targets = [(1, 2), (1, -2), (2, 1), (2, -1),
-               (-1, 2), (-1, -2), (-2, 1), (-2, -1)]
+    anda = [(1, 2), (1, -2), (2, 1), (2, -1),
+            (-1, 2), (-1, -2), (-2, 1), (-2, -1)]
     for i in range(8):
-        target = (position[0] + targets[i][0], position[1] + targets[i][1])
-        if target not in friends_list and 0 <= target[0] <= 7 and 0 <= target[1] <= 7:
-            moves_list.append(target)
-    return moves_list
+        mov_possivel = (posicao[0] + anda[i][0], posicao[1] + anda[i][1])
+        if mov_possivel not in pecas_da_cor and 0 <= mov_possivel[0] <= 7 and 0 <= mov_possivel[1] <= 7:
+            movimentos.append(mov_possivel)
+    return movimentos
 
 
-# check for valid moves for just selected piece
-def check_valid_moves(opcoes_negras, opcoes_brancas, jogo: xd.Xadrez):
+def verificar_mov_possiveis(opcoes_negras, opcoes_brancas, jogo: xd.Xadrez):
     if jogo.turno < 2:
-        options_list = opcoes_brancas
+        opcoes = opcoes_brancas
     else:
-        options_list = opcoes_negras
+        opcoes = opcoes_negras
 
-    valid_options = options_list[jogo.selecao]
-    return valid_options
+    opcoes_validas = opcoes[jogo.selecao]
+
+    return opcoes_validas
 
 
-def draw_valid(moves, jogo: xd.Xadrez):
+def mostra_mov_possiveis(moves, jogo: xd.Xadrez):
     if jogo.turno < 2:
-        color = 'red'
+        turno = 'red'
     else:
-        color = 'blue'
+        turno = 'blue'
     for i in range(len(moves)):
         pygame.draw.circle(
-            jogo.tela, color, (moves[i][0] * 60+30, moves[i][1] * 60+30), 5)
+            jogo.tela, turno, (moves[i][0] * 60+30, moves[i][1] * 60+30), 5)
 
 
-# draw captured pieces on side of jogo.tela
-def draw_captured(jogo: xd.Xadrez):
+def mostra_capturadas(jogo: xd.Xadrez):
     for i in range(len(jogo.cap_brancas)):
-        captured_piece = jogo.cap_brancas[i]
-        index = jogo.pecas.index(captured_piece)
-        jogo.tela.blit(jogo.imagens_negras_p[index], (825, 5 + 50 * i))
+        peca_capturada = jogo.cap_brancas[i]
+        index = jogo.pecas.index(peca_capturada)
+        jogo.tela.blit(jogo.imagens_negras_p[index], (600, 30 * i + 10))
     for i in range(len(jogo.cap_negras)):
-        captured_piece = jogo.cap_negras[i]
-        index = jogo.pecas.index(captured_piece)
-        jogo.tela.blit(jogo.imagens_brancas_p[index], (925, 5 + 50 * i))
+        peca_capturada = jogo.cap_negras[i]
+        index = jogo.pecas.index(peca_capturada)
+        jogo.tela.blit(jogo.imagens_brancas_p[index], (500, 30 * i+10))
 
 
-# draw a flashing square around king if in check
-def draw_check(jogo: xd.Xadrez, opcoes_negras, opcoes_brancas):
+def mostra_cheque(jogo: xd.Xadrez, opcoes_negras, opcoes_brancas):
     if jogo.turno < 2:
         if 'rei' in jogo.brancas:
-            king_index = jogo.brancas.index('rei')
-            king_location = jogo.loc_brancas[king_index]
+            index_rei = jogo.brancas.index('rei')
+            loc_rei = jogo.loc_brancas[index_rei]
             for i in range(len(opcoes_negras)):
-                if king_location in opcoes_negras[i]:
+                if loc_rei in opcoes_negras[i]:
                     if jogo.contador < 15:
-                        pygame.draw.rect(jogo.tela, 'dark red', [jogo.loc_brancas[king_index][0] * 100 + 1,
-                                                                 jogo.loc_brancas[king_index][1] * 100 + 1, 100, 100], 5)
+                        pygame.draw.rect(jogo.tela, 'dark red', [jogo.loc_brancas[index_rei][0] * 60 + 1,
+                                                                 jogo.loc_brancas[index_rei][1] * 60 + 1, 60, 60], 5)
     else:
         if 'rei' in jogo.negras:
-            king_index = jogo.negras.index('rei')
-            king_location = jogo.loc_negras[king_index]
+            index_rei = jogo.negras.index('rei')
+            loc_rei = jogo.loc_negras[index_rei]
             for i in range(len(opcoes_brancas)):
-                if king_location in opcoes_brancas[i]:
+                if loc_rei in opcoes_brancas[i]:
                     if jogo.contador < 15:
-                        pygame.draw.rect(jogo.tela, 'dark blue', [jogo.loc_negras[king_index][0] * 100 + 1,
-                                                                  jogo.loc_negras[king_index][1] * 100 + 1, 100, 100], 5)
+                        pygame.draw.rect(jogo.tela, 'dark blue', [jogo.loc_negras[index_rei][0] * 60 + 1,
+                                                                  jogo.loc_negras[index_rei][1] * 60 + 1, 60, 60], 5)
 
 
-def draw_game_over(jogo: xd.Xadrez):
+def mostra_final(jogo: xd.Xadrez):
     pygame.draw.rect(jogo.tela, 'black', [200, 200, 400, 70])
     jogo.tela.blit(jogo.fonte.render(
-        f'{jogo.vencedor} won the game!', True, 'white'), (210, 210))
-    jogo.tela.blit(jogo.fonte.render(f'Press ENTER to Restart!',
+        f'{jogo.vencedor} venceu!', True, 'white'), (210, 210))
+    jogo.tela.blit(jogo.fonte.render(f'Aperte ENTER para recomeçar!',
                                      True, 'white'), (210, 240))
 
 

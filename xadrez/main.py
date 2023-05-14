@@ -2,11 +2,13 @@ from functions import *
 
 jogo = inicio_jogo()
 
-opcoes_negras = check_options(jogo.negras, jogo.loc_negras, jogo, 'negras')
-opcoes_brancas = check_options(jogo.brancas, jogo.loc_brancas, jogo, 'brancas')
-run = True
+opcoes_negras = verifica_movimentos(
+    jogo.negras, jogo.loc_negras, jogo, 'negras')
+opcoes_brancas = verifica_movimentos(
+    jogo.brancas, jogo.loc_brancas, jogo, 'brancas')
+rodando = True
 
-while run:
+while rodando:
     jogo.tempo.tick(jogo.fps)
     if jogo.contador < 30:
         jogo.contador += 1
@@ -14,85 +16,85 @@ while run:
         jogo.contador = 0
     jogo.tela.fill('dark gray')
 
-    draw_board(jogo)
-    draw_pieces(jogo)
-    # draw_captured(jogo)
-    # draw_check(jogo, opcoes_negras, opcoes_brancas)
+    mostra_tabuleiro(jogo)
+    mostra_pecas(jogo)
+    mostra_capturadas(jogo)
+    mostra_cheque(jogo, opcoes_negras, opcoes_brancas)
 
     if jogo.selecao != 100:
-        jogo.movimentos_validos = check_valid_moves(
+        jogo.movimentos_validos = verificar_mov_possiveis(
             opcoes_negras, opcoes_brancas, jogo)
-        draw_valid(jogo.movimentos_validos, jogo)
+        mostra_mov_possiveis(jogo.movimentos_validos, jogo)
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            run = False
+    for evento in pygame.event.get():
+        if evento.type == pygame.QUIT:
+            rodando = False
 
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and not jogo.fim:
+        if evento.type == pygame.MOUSEBUTTONDOWN and evento.button == 1 and not jogo.fim:
 
-            x_coord = event.pos[0] // 60
-            y_coord = event.pos[1] // 60
+            x_coord = evento.pos[0] // 60
+            y_coord = evento.pos[1] // 60
 
-            click_coords = (x_coord, y_coord)
-            # print(click_coords)
+            clicou = (x_coord, y_coord)
+            # print(clicou)
 
             if jogo.turno <= 1:
-                if click_coords == (10, 9) or click_coords == (11, 9) or click_coords == (12, 9) or click_coords == (13, 9):
+                if clicou == (11, 9) or clicou == (12, 9) or clicou == (13, 9) or clicou == (14, 9):
                     jogo.vencedor = 'negras'
 
-                if click_coords in jogo.loc_brancas:
-                    jogo.selecao = jogo.loc_brancas.index(click_coords)
+                if clicou in jogo.loc_brancas:
+                    jogo.selecao = jogo.loc_brancas.index(clicou)
                     if jogo.turno == 0:
                         jogo.turno = 1
 
-                if click_coords in jogo.movimentos_validos and jogo.selecao != 100:
-                    jogo.loc_brancas[jogo.selecao] = click_coords
+                if clicou in jogo.movimentos_validos and jogo.selecao != 100:
+                    jogo.loc_brancas[jogo.selecao] = clicou
 
-                    if click_coords in jogo.loc_negras:
-                        black_piece = jogo.loc_negras.index(click_coords)
-                        jogo.cap_brancas.append(jogo.negras[black_piece])
+                    if clicou in jogo.loc_negras:
+                        peca_negra = jogo.loc_negras.index(clicou)
+                        jogo.cap_brancas.append(jogo.negras[peca_negra])
 
-                        if jogo.negras[black_piece] == 'rei':
+                        if jogo.negras[peca_negra] == 'rei':
                             jogo.vencedor = 'brancas'
 
-                        jogo.negras.pop(black_piece)
-                        jogo.loc_negras.pop(black_piece)
+                        jogo.negras.pop(peca_negra)
+                        jogo.loc_negras.pop(peca_negra)
 
-                    opcoes_negras = check_options(
+                    opcoes_negras = verifica_movimentos(
                         jogo.negras, jogo.loc_negras, jogo, 'negras')
 
-                    opcoes_brancas = check_options(
+                    opcoes_brancas = verifica_movimentos(
                         jogo.brancas, jogo.loc_brancas, jogo, 'brancas')
                     jogo.turno = 2
                     jogo.selecao = 100
                     jogo.movimentos_validos = []
 
             if jogo.turno > 1:
-                if click_coords == (10, 9) or click_coords == (11, 9) or click_coords == (12, 9) or click_coords == (13, 9):
+                if clicou == (11, 9) or clicou == (12, 9) or clicou == (13, 9) or clicou == (14, 9):
                     jogo.vencedor = 'brancas'
-                if click_coords in jogo.loc_negras:
-                    jogo.selecao = jogo.loc_negras.index(click_coords)
+                if clicou in jogo.loc_negras:
+                    jogo.selecao = jogo.loc_negras.index(clicou)
                     if jogo.turno == 2:
                         jogo.turno = 3
-                if click_coords in jogo.movimentos_validos and jogo.selecao != 100:
-                    jogo.loc_negras[jogo.selecao] = click_coords
-                    if click_coords in jogo.loc_brancas:
-                        white_piece = jogo.loc_brancas.index(click_coords)
+                if clicou in jogo.movimentos_validos and jogo.selecao != 100:
+                    jogo.loc_negras[jogo.selecao] = clicou
+                    if clicou in jogo.loc_brancas:
+                        white_piece = jogo.loc_brancas.index(clicou)
                         jogo.cap_negras.append(jogo.brancas[white_piece])
                         if jogo.brancas[white_piece] == 'rei':
                             jogo.vencedor = 'negras'
                         jogo.brancas.pop(white_piece)
                         jogo.loc_brancas.pop(white_piece)
-                    opcoes_negras = check_options(
+                    opcoes_negras = verifica_movimentos(
                         jogo.negras, jogo.loc_negras, jogo, 'negras')
-                    opcoes_brancas = check_options(
+                    opcoes_brancas = verifica_movimentos(
                         jogo.brancas, jogo.loc_brancas, jogo, 'brancas')
                     jogo.turno = 0
                     jogo.selecao = 100
                     jogo.movimentos_validos = []
 
-        if event.type == pygame.KEYDOWN and jogo.fim:
-            if event.key == pygame.K_RETURN:
+        if evento.type == pygame.KEYDOWN and jogo.fim:
+            if evento.key == pygame.K_RETURN:
                 jogo.fim = False
                 jogo.vencedor = ''
                 jogo.brancas = ['torre', 'cavalo', 'bispo', 'rei', 'rainha', 'bispo', 'cavalo', 'torre',
@@ -108,16 +110,15 @@ while run:
                 jogo.turno = 0
                 jogo.selecao = 100
                 jogo.movimentos_validos = []
-                opcoes_negras = check_options(
+                opcoes_negras = verifica_movimentos(
                     jogo.negras, jogo.loc_negras, jogo, 'negras')
-                opcoes_brancas = check_options(
+                opcoes_brancas = verifica_movimentos(
                     jogo.brancas, jogo.loc_brancas, jogo, 'brancas')
 
     if jogo.vencedor != '':
         jogo.fim = True
-        draw_game_over(jogo)
+        mostra_final(jogo)
 
     pygame.display.flip()
-
 
 fim_jogo()

@@ -1,5 +1,11 @@
 import pygame
-import Xadrez as xd
+import classes.Xadrez as xd
+from classes.Rainha import Rainha
+from classes.Rei import Rei
+from classes.Torre import Torre
+from classes.Bispo import Bispo
+from classes.Cavalo import Cavalo
+from classes.Peao import Peao
 
 
 def inicio_jogo():
@@ -73,173 +79,27 @@ def verifica_movimentos(pecas, localizacoes, jogo: xd.Xadrez, turno):
         loc = localizacoes[i]
         peca = pecas[i]
         if peca == 'peao':
-            movimentos = verifica_peao(loc, turno, jogo)
+            movimentos = Peao.movimentos(
+                loc, turno, jogo.loc_brancas, jogo.loc_negras)
         elif peca == 'torre':
-            movimentos = verifica_torre(loc, turno, jogo)
+            movimentos = Torre.movimentos(
+                loc, turno, jogo.loc_brancas, jogo.loc_negras)
         elif peca == 'cavalo':
-            movimentos = verifica_cavalo(loc, turno, jogo)
+            movimentos = Cavalo.movimentos(
+                loc, turno, jogo.loc_brancas, jogo.loc_negras)
         elif peca == 'bispo':
-            movimentos = verifica_bispo(loc, turno, jogo)
+            movimentos = Bispo.movimentos(
+                loc, turno, jogo.loc_brancas, jogo.loc_negras)
         elif peca == 'rainha':
-            movimentos = verifica_rainha(loc, turno, jogo)
+            movimentos = Rainha.movimentos(
+                loc, turno, jogo.loc_brancas, jogo.loc_negras)
         elif peca == 'rei':
-            movimentos = verifica_rei(loc, turno, jogo)
+            movimentos = Rei.movimentos(
+                loc, turno, jogo.loc_brancas, jogo.loc_negras)
 
         todos_movimentos.append(movimentos)
 
     return todos_movimentos
-
-
-def verifica_rei(posicao, turno, jogo: xd.Xadrez):
-    movimentos = []
-    if turno == 'brancas':
-        pecas_da_cor = jogo.loc_brancas
-    else:
-        pecas_da_cor = jogo.loc_negras
-
-    anda = [(1, 0), (1, 1), (1, -1), (-1, 0),
-            (-1, 1), (-1, -1), (0, 1), (0, -1)]
-
-    for i in range(8):
-        mov_possivel = (posicao[0] + anda[i][0], posicao[1] + anda[i][1])
-
-        if mov_possivel not in pecas_da_cor and 0 <= mov_possivel[0] <= 7 and 0 <= mov_possivel[1] <= 7:
-
-            movimentos.append(mov_possivel)
-
-    return movimentos
-
-
-def verifica_rainha(posicao, turno, jogo: xd.Xadrez):
-    movimentos_bispo = verifica_bispo(posicao, turno, jogo)
-    movimentos_torre = verifica_torre(posicao, turno, jogo)
-
-    for i in range(len(movimentos_torre)):
-        movimentos_bispo.append(movimentos_torre[i])
-
-    return movimentos_bispo
-
-
-def verifica_bispo(posicao, turno, jogo: xd.Xadrez):
-    movimentos = []
-    if turno == 'brancas':
-        pecas_outra_cor = jogo.loc_negras
-        pecas_da_cor = jogo.loc_brancas
-    else:
-        pecas_da_cor = jogo.loc_negras
-        pecas_outra_cor = jogo.loc_brancas
-
-    # up-right, up-left, down-right, down-left
-    for i in range(4):
-        passa = True
-        sequencia = 1
-        if i == 0:
-            x = 1
-            y = -1
-        elif i == 1:
-            x = -1
-            y = -1
-        elif i == 2:
-            x = 1
-            y = 1
-        else:
-            x = -1
-            y = 1
-
-        while passa:
-            if (posicao[0] + (sequencia * x), posicao[1] + (sequencia * y)) not in pecas_da_cor and \
-                    0 <= posicao[0] + (sequencia * x) <= 7 and 0 <= posicao[1] + (sequencia * y) <= 7:
-                movimentos.append(
-                    (posicao[0] + (sequencia * x), posicao[1] + (sequencia * y)))
-
-                if (posicao[0] + (sequencia * x), posicao[1] + (sequencia * y)) in pecas_outra_cor:
-                    passa = False
-                sequencia += 1
-            else:
-                passa = False
-
-    return movimentos
-
-
-def verifica_torre(posicao, turno, jogo: xd.Xadrez):
-    movimentos = []
-    if turno == 'brancas':
-        pecas_outra_cor = jogo.loc_negras
-        pecas_da_cor = jogo.loc_brancas
-    else:
-        pecas_da_cor = jogo.loc_negras
-        pecas_outra_cor = jogo.loc_brancas
-    for i in range(4):  # down, up, right, left
-        passa = True
-        sequencia = 1
-        if i == 0:
-            x = 0
-            y = 1
-        elif i == 1:
-            x = 0
-            y = -1
-        elif i == 2:
-            x = 1
-            y = 0
-        else:
-            x = -1
-            y = 0
-        while passa:
-            if (posicao[0] + (sequencia * x), posicao[1] + (sequencia * y)) not in pecas_da_cor and \
-                    0 <= posicao[0] + (sequencia * x) <= 7 and 0 <= posicao[1] + (sequencia * y) <= 7:
-                movimentos.append(
-                    (posicao[0] + (sequencia * x), posicao[1] + (sequencia * y)))
-                if (posicao[0] + (sequencia * x), posicao[1] + (sequencia * y)) in pecas_outra_cor:
-                    passa = False
-                sequencia += 1
-            else:
-                passa = False
-    return movimentos
-
-
-def verifica_peao(posicao, turno, jogo: xd.Xadrez):
-    movimentos = []
-    if turno == 'brancas':
-        if (posicao[0], posicao[1] + 1) not in jogo.loc_brancas and \
-                (posicao[0], posicao[1] + 1) not in jogo.loc_negras and posicao[1] < 7:
-            movimentos.append((posicao[0], posicao[1] + 1))
-        if (posicao[0], posicao[1] + 2) not in jogo.loc_brancas and \
-                (posicao[0], posicao[1] + 2) not in jogo.loc_negras and posicao[1] == 1:
-            movimentos.append((posicao[0], posicao[1] + 2))
-        if (posicao[0] + 1, posicao[1] + 1) in jogo.loc_negras:
-            movimentos.append((posicao[0] + 1, posicao[1] + 1))
-        if (posicao[0] - 1, posicao[1] + 1) in jogo.loc_negras:
-            movimentos.append((posicao[0] - 1, posicao[1] + 1))
-    else:
-        if (posicao[0], posicao[1] - 1) not in jogo.loc_brancas and \
-                (posicao[0], posicao[1] - 1) not in jogo.loc_negras and posicao[1] > 0:
-            movimentos.append((posicao[0], posicao[1] - 1))
-        if (posicao[0], posicao[1] - 2) not in jogo.loc_brancas and \
-                (posicao[0], posicao[1] - 2) not in jogo.loc_negras and posicao[1] == 6:
-            movimentos.append((posicao[0], posicao[1] - 2))
-        if (posicao[0] + 1, posicao[1] - 1) in jogo.loc_brancas:
-            movimentos.append((posicao[0] + 1, posicao[1] - 1))
-        if (posicao[0] - 1, posicao[1] - 1) in jogo.loc_brancas:
-            movimentos.append((posicao[0] - 1, posicao[1] - 1))
-
-    return movimentos
-
-
-def verifica_cavalo(posicao, turno, jogo: xd.Xadrez):
-    movimentos = []
-    if turno == 'brancas':
-        pecas_da_cor = jogo.loc_brancas
-    else:
-        pecas_da_cor = jogo.loc_negras
-
-    # 8 squares to check for knights, they can go two squares in one direction and one in another
-    anda = [(1, 2), (1, -2), (2, 1), (2, -1),
-            (-1, 2), (-1, -2), (-2, 1), (-2, -1)]
-    for i in range(8):
-        mov_possivel = (posicao[0] + anda[i][0], posicao[1] + anda[i][1])
-        if mov_possivel not in pecas_da_cor and 0 <= mov_possivel[0] <= 7 and 0 <= mov_possivel[1] <= 7:
-            movimentos.append(mov_possivel)
-    return movimentos
 
 
 def verificar_mov_possiveis(opcoes_negras, opcoes_brancas, jogo: xd.Xadrez):

@@ -1,6 +1,6 @@
-from classes.Peca import Peca
-from classes.Bispo import Bispo
-from classes.Torre import Torre
+from pecas.Peca import Peca
+from pecas.Bispo import Bispo
+from pecas.Torre import Torre
 
 
 class Rainha(Peca):

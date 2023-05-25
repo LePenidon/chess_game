@@ -1,10 +1,12 @@
-from functions import *
+import pygame
+from Xadrez import Xadrez
 
-jogo = inicio_jogo()
 
-opcoes_negras = verifica_movimentos(
+jogo = Xadrez.inicio_jogo()
+
+opcoes_negras = Xadrez.verifica_movimentos(
     jogo.negras, jogo.loc_negras, jogo, 'negras')
-opcoes_brancas = verifica_movimentos(
+opcoes_brancas = Xadrez.verifica_movimentos(
     jogo.brancas, jogo.loc_brancas, jogo, 'brancas')
 rodando = True
 
@@ -14,16 +16,16 @@ while rodando:
         jogo.contador += 1
     else:
         jogo.contador = 0
-    jogo.tela.fill('dark gray')
+    jogo.tela.fill('dark grey')
 
-    mostra_tabuleiro(jogo)
-    mostra_pecas(jogo)
-    mostra_cheque(jogo, opcoes_negras, opcoes_brancas)
+    Xadrez.mostra_tabuleiro(jogo)
+    Xadrez.mostra_pecas(jogo)
+    Xadrez.mostra_cheque(jogo, opcoes_negras, opcoes_brancas)
 
     if jogo.selecao != 100:
-        jogo.movimentos_validos = verificar_mov_possiveis(
+        jogo.movimentos_validos = Xadrez.verificar_mov_possiveis(
             opcoes_negras, opcoes_brancas, jogo)
-        mostra_mov_possiveis(jogo.movimentos_validos, jogo)
+        Xadrez.mostra_mov_possiveis(jogo.movimentos_validos, jogo)
 
     for evento in pygame.event.get():
         if evento.type == pygame.QUIT:
@@ -35,7 +37,6 @@ while rodando:
             y_coord = evento.pos[1] // 60
 
             clicou = (x_coord, y_coord)
-            # print(clicou)
 
             if jogo.turno <= 1:
 
@@ -57,10 +58,10 @@ while rodando:
                         jogo.negras.pop(peca_negra)
                         jogo.loc_negras.pop(peca_negra)
 
-                    opcoes_negras = verifica_movimentos(
+                    opcoes_negras = Xadrez.verifica_movimentos(
                         jogo.negras, jogo.loc_negras, jogo, 'negras')
 
-                    opcoes_brancas = verifica_movimentos(
+                    opcoes_brancas = Xadrez.verifica_movimentos(
                         jogo.brancas, jogo.loc_brancas, jogo, 'brancas')
                     jogo.turno = 2
                     jogo.selecao = 100
@@ -81,9 +82,9 @@ while rodando:
                             jogo.vencedor = 'negras'
                         jogo.brancas.pop(white_piece)
                         jogo.loc_brancas.pop(white_piece)
-                    opcoes_negras = verifica_movimentos(
+                    opcoes_negras = Xadrez.verifica_movimentos(
                         jogo.negras, jogo.loc_negras, jogo, 'negras')
-                    opcoes_brancas = verifica_movimentos(
+                    opcoes_brancas = Xadrez.verifica_movimentos(
                         jogo.brancas, jogo.loc_brancas, jogo, 'brancas')
                     jogo.turno = 0
                     jogo.selecao = 100
@@ -106,15 +107,15 @@ while rodando:
                 jogo.turno = 0
                 jogo.selecao = 100
                 jogo.movimentos_validos = []
-                opcoes_negras = verifica_movimentos(
+                opcoes_negras = Xadrez.verifica_movimentos(
                     jogo.negras, jogo.loc_negras, jogo, 'negras')
-                opcoes_brancas = verifica_movimentos(
+                opcoes_brancas = Xadrez.verifica_movimentos(
                     jogo.brancas, jogo.loc_brancas, jogo, 'brancas')
 
     if jogo.vencedor != '':
         jogo.fim = True
-        mostra_final(jogo)
+        Xadrez.mostra_final(jogo)
 
     pygame.display.flip()
 
-fim_jogo()
+Xadrez.fim_jogo()

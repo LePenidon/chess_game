@@ -1,4 +1,4 @@
-from classes.Peca import Peca
+from pecas.Peca import Peca
 
 
 class Cavalo(Peca):

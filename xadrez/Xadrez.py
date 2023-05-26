@@ -33,6 +33,10 @@ class Xadrez():
     vencedor = 0
     fim = 0
 
+    som_mov = 0
+    som_inicio = 0
+    som_fim = 0
+
     def __init__(self):
         self.comprimento = 480
         self.altura = 600
@@ -90,12 +94,19 @@ class Xadrez():
         self.vencedor = ''
         self.fim = False
 
+        self.som_mov = pygame.mixer.Sound("./sons/movimento.mp3")
+        self.som_inicio = pygame.mixer.Sound("./sons/inicio.mp3")
+        self.som_fim = pygame.mixer.Sound("./sons/fim.mp3")
+
         return
 
     def inicio_jogo():
         pygame.init()
         pygame.font.init()
+        pygame.mixer.init()
+
         jogo = Xadrez()
+        jogo.som_inicio.play()
 
         return jogo
 
@@ -218,6 +229,9 @@ class Xadrez():
                 jogo.tela, 'blue', (moves[i][0] * 60+30, moves[i][1] * 60+30), 5)
 
     def mostra_final(jogo):
+        jogo.som_fim.play()
+        jogo.som_fim.set_volume(0.1)
+
         pygame.draw.rect(jogo.tela, 'red', [90, 200, 340, 70])
 
         if jogo.vencedor == 'brancas':

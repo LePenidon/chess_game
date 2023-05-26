@@ -38,6 +38,9 @@ while rodando:
 
             clicou = (x_coord, y_coord)
 
+            jogo.som_fim.stop()
+            jogo.som_inicio.stop()
+
             if jogo.turno <= 1:
 
                 if clicou in jogo.loc_brancas:
@@ -47,6 +50,7 @@ while rodando:
 
                 if clicou in jogo.movimentos_validos and jogo.selecao != 100:
                     jogo.loc_brancas[jogo.selecao] = clicou
+                    jogo.som_mov.play()
 
                     if clicou in jogo.loc_negras:
                         peca_negra = jogo.loc_negras.index(clicou)
@@ -75,6 +79,8 @@ while rodando:
                         jogo.turno = 3
                 if clicou in jogo.movimentos_validos and jogo.selecao != 100:
                     jogo.loc_negras[jogo.selecao] = clicou
+                    jogo.som_mov.play()
+
                     if clicou in jogo.loc_brancas:
                         white_piece = jogo.loc_brancas.index(clicou)
                         jogo.cap_negras.append(jogo.brancas[white_piece])

@@ -43,8 +43,8 @@ class Xadrez():
         self.tela = pygame.display.set_mode((self.comprimento, self.altura))
         pygame.display.set_caption('Xadrez 1v1')
 
-        self.fonte = pygame.font.Font('freesansbold.ttf', 20)
-        self.fonte_media = pygame.font.Font('freesansbold.ttf', 40)
+        self.fonte = pygame.font.Font(pygame.font.get_default_font(), 20)
+        self.fonte_media = pygame.font.Font(pygame.font.get_default_font(), 40)
         self.tempo = pygame.time.Clock()
         self.fps = 60
 

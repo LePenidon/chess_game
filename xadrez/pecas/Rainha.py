@@ -5,8 +5,8 @@ from pecas.Torre import Torre
 
 class Rainha(Peca):
 
-    def __init__(self, uma_cor, uma_imagem, uma_loc):
-        super().__init__(uma_cor, "rainha", uma_imagem, uma_loc)
+    def __init__(self, uma_cor, uma_imagem):
+        super().__init__(uma_cor, "rainha", uma_imagem)
 
         return
 

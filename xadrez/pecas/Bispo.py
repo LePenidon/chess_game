@@ -3,8 +3,8 @@ from pecas.Peca import Peca
 
 class Bispo(Peca):
 
-    def __init__(self, uma_cor, uma_imagem, uma_loc):
-        super().__init__(uma_cor, "bispo", uma_imagem, uma_loc)
+    def __init__(self, uma_cor, uma_imagem):
+        super().__init__(uma_cor, "bispo", uma_imagem)
 
         return
 

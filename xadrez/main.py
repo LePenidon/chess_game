@@ -4,10 +4,9 @@ from Conjuntos import Conjuntos
 
 
 jogo = Xadrez.inicio_jogo()
-conjuntos = Conjuntos()
 
-opcoes_negras = conjuntos.verifica_movimentos('negras')
-opcoes_brancas = conjuntos.verifica_movimentos('brancas')
+opcoes_negras = jogo.conjuntos.verifica_movimentos('negras')
+opcoes_brancas = jogo.conjuntos.verifica_movimentos('brancas')
 rodando = True
 
 while rodando:
@@ -19,13 +18,13 @@ while rodando:
     jogo.tela.fill('dark grey')
 
     Xadrez.mostra_tabuleiro(jogo)
-    Xadrez.mostra_pecas(jogo, conjuntos)
-    Xadrez.mostra_cheque(jogo, conjuntos, opcoes_negras, opcoes_brancas)
+    Xadrez.mostra_pecas(jogo)
+    Xadrez.mostra_cheque(jogo, opcoes_negras, opcoes_brancas)
 
     if jogo.selecao != 100:
-        conjuntos.movimentos_validos = Xadrez.verificar_mov_possiveis(
+        jogo.conjuntos.movimentos_validos = Xadrez.verificar_mov_possiveis(
             opcoes_negras, opcoes_brancas, jogo)
-        Xadrez.mostra_mov_possiveis(conjuntos.movimentos_validos, jogo)
+        Xadrez.mostra_mov_possiveis(jogo.conjuntos.movimentos_validos, jogo)
 
     for evento in pygame.event.get():
         if evento.type == pygame.QUIT:
@@ -43,76 +42,80 @@ while rodando:
 
             if jogo.turno <= 1:
 
-                if clicou in conjuntos.loc_brancas:
-                    jogo.selecao = conjuntos.loc_brancas.index(clicou)
+                if clicou in jogo.conjuntos.loc_brancas:
+                    jogo.selecao = jogo.conjuntos.loc_brancas.index(clicou)
                     if jogo.turno == 0:
                         jogo.turno = 1
 
-                if clicou in conjuntos.movimentos_validos and jogo.selecao != 100:
-                    conjuntos.loc_brancas[jogo.selecao] = clicou
+                if clicou in jogo.conjuntos.movimentos_validos and jogo.selecao != 100:
+                    jogo.conjuntos.loc_brancas[jogo.selecao] = clicou
                     jogo.som_mov.play()
 
-                    if clicou in conjuntos.loc_negras:
-                        peca_negra = conjuntos.loc_negras.index(clicou)
-                        conjuntos.cap_brancas.append(
-                            conjuntos.negras[peca_negra])
+                    if clicou in jogo.conjuntos.loc_negras:
+                        peca_negra = jogo.conjuntos.loc_negras.index(clicou)
+                        jogo.conjuntos.cap_brancas.append(
+                            jogo.conjuntos.negras[peca_negra])
 
-                        if conjuntos.negras[peca_negra] == 'rei':
+                        if jogo.conjuntos.negras[peca_negra] == 'rei':
                             jogo.vencedor = 'brancas'
 
-                        conjuntos.negras.pop(peca_negra)
-                        conjuntos.loc_negras.pop(peca_negra)
+                        jogo.conjuntos.negras.pop(peca_negra)
+                        jogo.conjuntos.loc_negras.pop(peca_negra)
 
-                    opcoes_negras = conjuntos.verifica_movimentos('negras')
+                    opcoes_negras = jogo.conjuntos.verifica_movimentos(
+                        'negras')
 
-                    opcoes_brancas = conjuntos.verifica_movimentos('brancas')
+                    opcoes_brancas = jogo.conjuntos.verifica_movimentos(
+                        'brancas')
                     jogo.turno = 2
                     jogo.selecao = 100
-                    conjuntos.movimentos_validos = []
+                    jogo.conjuntos.movimentos_validos = []
 
             if jogo.turno > 1:
 
-                if clicou in conjuntos.loc_negras:
-                    jogo.selecao = conjuntos.loc_negras.index(clicou)
+                if clicou in jogo.conjuntos.loc_negras:
+                    jogo.selecao = jogo.conjuntos.loc_negras.index(clicou)
                     if jogo.turno == 2:
                         jogo.turno = 3
-                if clicou in conjuntos.movimentos_validos and jogo.selecao != 100:
-                    conjuntos.loc_negras[jogo.selecao] = clicou
+                if clicou in jogo.conjuntos.movimentos_validos and jogo.selecao != 100:
+                    jogo.conjuntos.loc_negras[jogo.selecao] = clicou
                     jogo.som_mov.play()
 
-                    if clicou in conjuntos.loc_brancas:
-                        white_piece = conjuntos.loc_brancas.index(clicou)
-                        conjuntos.cap_negras.append(
-                            conjuntos.brancas[white_piece])
-                        if conjuntos.brancas[white_piece] == 'rei':
+                    if clicou in jogo.conjuntos.loc_brancas:
+                        white_piece = jogo.conjuntos.loc_brancas.index(clicou)
+                        jogo.conjuntos.cap_negras.append(
+                            jogo.conjuntos.brancas[white_piece])
+                        if jogo.conjuntos.brancas[white_piece] == 'rei':
                             jogo.vencedor = 'negras'
-                        conjuntos.brancas.pop(white_piece)
-                        conjuntos.loc_brancas.pop(white_piece)
-                    opcoes_negras = conjuntos.verifica_movimentos('negras')
-                    opcoes_brancas = conjuntos.verifica_movimentos('brancas')
+                        jogo.conjuntos.brancas.pop(white_piece)
+                        jogo.conjuntos.loc_brancas.pop(white_piece)
+                    opcoes_negras = jogo.conjuntos.verifica_movimentos(
+                        'negras')
+                    opcoes_brancas = jogo.conjuntos.verifica_movimentos(
+                        'brancas')
                     jogo.turno = 0
                     jogo.selecao = 100
-                    conjuntos.movimentos_validos = []
+                    jogo.conjuntos.movimentos_validos = []
 
         if evento.type == pygame.KEYDOWN and jogo.fim:
             if evento.key == pygame.K_RETURN:
                 jogo.fim = False
                 jogo.vencedor = ''
-                conjuntos.brancas = ['torre', 'cavalo', 'bispo', 'rei', 'rainha', 'bispo', 'cavalo', 'torre',
-                                     'peao', 'peao', 'peao', 'peao', 'peao', 'peao', 'peao', 'peao']
-                conjuntos.loc_brancas = [(0, 0), (1, 0), (2, 0), (3, 0), (4, 0), (5, 0), (6, 0), (7, 0),
-                                         (0, 1), (1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1), (7, 1)]
-                conjuntos.negras = ['torre', 'cavalo', 'bispo', 'rei', 'rainha', 'bispo', 'cavalo', 'torre',
-                                    'peao', 'peao', 'peao', 'peao', 'peao', 'peao', 'peao', 'peao']
-                conjuntos.loc_negras = [(0, 7), (1, 7), (2, 7), (3, 7), (4, 7), (5, 7), (6, 7), (7, 7),
-                                        (0, 6), (1, 6), (2, 6), (3, 6), (4, 6), (5, 6), (6, 6), (7, 6)]
-                conjuntos.cap_brancas = []
-                conjuntos.cap_negras = []
+                jogo.conjuntos.brancas = ['torre', 'cavalo', 'bispo', 'rei', 'rainha', 'bispo', 'cavalo', 'torre',
+                                          'peao', 'peao', 'peao', 'peao', 'peao', 'peao', 'peao', 'peao']
+                jogo.conjuntos.loc_brancas = [(0, 0), (1, 0), (2, 0), (3, 0), (4, 0), (5, 0), (6, 0), (7, 0),
+                                              (0, 1), (1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1), (7, 1)]
+                jogo.conjuntos.negras = ['torre', 'cavalo', 'bispo', 'rei', 'rainha', 'bispo', 'cavalo', 'torre',
+                                         'peao', 'peao', 'peao', 'peao', 'peao', 'peao', 'peao', 'peao']
+                jogo.conjuntos.loc_negras = [(0, 7), (1, 7), (2, 7), (3, 7), (4, 7), (5, 7), (6, 7), (7, 7),
+                                             (0, 6), (1, 6), (2, 6), (3, 6), (4, 6), (5, 6), (6, 6), (7, 6)]
+                jogo.conjuntos.cap_brancas = []
+                jogo.conjuntos.cap_negras = []
                 jogo.turno = 0
                 jogo.selecao = 100
-                conjuntos.movimentos_validos = []
-                opcoes_negras = conjuntos.verifica_movimentos('negras')
-                opcoes_brancas = conjuntos.verifica_movimentos('brancas')
+                jogo.conjuntos.movimentos_validos = []
+                opcoes_negras = jogo.conjuntos.verifica_movimentos('negras')
+                opcoes_brancas = jogo.conjuntos.verifica_movimentos('brancas')
 
     if jogo.vencedor != '':
         jogo.fim = True

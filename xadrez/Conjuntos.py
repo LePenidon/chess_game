@@ -38,7 +38,11 @@ class Conjuntos():
     def __getitem__(self, index):
         return self.pecas[index]
 
+    def __setitem__(self, index, value):
+        self.pecas[index] = value
+
     # retorna os nomes das pecas
+
     def get_nomes_pecas(self):
         nomes = [i.nome for i in self.pecas]
 

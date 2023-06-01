@@ -1,6 +1,7 @@
 import pygame
 from Xadrez import Xadrez
 from Conjuntos import Conjuntos
+from pecas.Rainha import Rainha
 
 # cria o objeto jogo
 jogo = Xadrez.inicio_jogo()
@@ -73,6 +74,11 @@ while rodando:
                         jogo.negras.pecas.pop(
                             jogo.negras.index_posicao(peca_negra.posicao))
 
+                    # verifica promoção do peão
+                    if jogo.brancas[jogo.selecao].nome == 'peao' and jogo.brancas[jogo.selecao].posicao[1] == 7:
+                        jogo.brancas[jogo.selecao] = Rainha(
+                            'brancas', 'RainhaBranca', jogo.brancas[jogo.selecao].posicao)
+
                     # atualiza o jogo
                     opcoes_negras = jogo.verifica_movimentos('negras')
                     opcoes_brancas = jogo.verifica_movimentos('brancas')
@@ -104,6 +110,11 @@ while rodando:
 
                         jogo.brancas.pecas.pop(
                             jogo.brancas.index_posicao(peca_branca.posicao))
+
+                    # verifica promoção do peão
+                    if jogo.negras[jogo.selecao].nome == 'peao' and jogo.negras[jogo.selecao].posicao[1] == 0:
+                        jogo.negras[jogo.selecao] = Rainha(
+                            'negras', 'RainhaPreta', jogo.negras[jogo.selecao].posicao)
 
                     # atualiza o jogo
                     opcoes_negras = jogo.verifica_movimentos('negras')

@@ -1,12 +1,12 @@
 import pygame
 from Xadrez import Xadrez
-from Conjuntos import Conjuntos
 
 
 jogo = Xadrez.inicio_jogo()
 
-opcoes_negras = jogo.conjuntos.verifica_movimentos('negras')
-opcoes_brancas = jogo.conjuntos.verifica_movimentos('brancas')
+opcoes_negras = jogo.verifica_movimentos('negras')
+opcoes_brancas = jogo.verifica_movimentos('brancas')
+
 rodando = True
 
 while rodando:

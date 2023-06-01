@@ -3,8 +3,8 @@ from pecas.Peca import Peca
 
 class Torre(Peca):
 
-    def __init__(self, uma_cor, uma_imagem):
-        super().__init__(uma_cor, "torre", uma_imagem)
+    def __init__(self, uma_cor, uma_imagem, uma_posicao):
+        super().__init__(uma_cor, "torre", uma_imagem, uma_posicao)
 
         return
 

@@ -9,10 +9,10 @@ from Conjuntos import Conjuntos
 
 
 class Xadrez():
+    # atributos
     brancas = 0
     negras = 0
     conjuntos = 0
-
     comprimento = 0
     altura = 0
     tela = 0
@@ -22,15 +22,15 @@ class Xadrez():
     fps = 0
     turno = 0
     selecao = 0
-
+    movimentos_validos = 0
     contador = 0
     vencedor = 0
     fim = 0
-
     som_mov = 0
     som_inicio = 0
     som_fim = 0
 
+    # construtor
     def __init__(self):
         self.brancas = Conjuntos("brancas")
         self.negras = Conjuntos("negras")
@@ -44,20 +44,19 @@ class Xadrez():
         self.fonte_media = pygame.font.Font(pygame.font.get_default_font(), 40)
         self.tempo = pygame.time.Clock()
         self.fps = 60
-
         self.turno = 0
         self.selecao = 100
-
+        self.movimentos_validos = []
         self.contador = 0
         self.vencedor = ''
         self.fim = False
-
         self.som_mov = pygame.mixer.Sound("./sons/movimento.mp3")
         self.som_inicio = pygame.mixer.Sound("./sons/inicio.mp3")
         self.som_fim = pygame.mixer.Sound("./sons/fim.mp3")
 
         return
 
+    # inicia o jogo
     def inicio_jogo():
         pygame.init()
         pygame.font.init()
@@ -68,6 +67,7 @@ class Xadrez():
 
         return jogo
 
+    # mostra o tabuleiro
     def mostra_tabuleiro(jogo):
         for i in range(32):
             coluna = i % 4
@@ -95,6 +95,7 @@ class Xadrez():
                 pygame.draw.line(jogo.tela, 'black',
                                  (60 * i, 0), (60 * i, 480), 2)
 
+    # mostra as peças
     def mostra_pecas(jogo):
         for i in jogo.brancas:
             if i.nome == 'peao':
@@ -104,7 +105,7 @@ class Xadrez():
                 jogo.tela.blit(
                     i.imagem, ((i.posicao[0] * 60)+10, (i.posicao[1] * 60)+10))
             if jogo.turno < 2:
-                if jogo.selecao == i:
+                if jogo.selecao == jogo.brancas.index_posicao(i.posicao):
                     pygame.draw.rect(jogo.tela, 'blue', [
                                      (i.posicao[0] * 60)+2, (i.posicao[1] * 60)+2, 60, 60], 2)
 
@@ -116,10 +117,11 @@ class Xadrez():
                 jogo.tela.blit(
                     i.imagem, ((i.posicao[0] * 60)+10, (i.posicao[1] * 60)+10))
             if jogo.turno >= 2:
-                if jogo.selecao == i:
+                if jogo.selecao == jogo.negras.index_posicao(i.posicao):
                     pygame.draw.rect(jogo.tela, 'blue', [
                                      (i.posicao[0] * 60)+2, (i.posicao[1] * 60)+2, 60, 60], 2)
 
+    # mostra se há cheque
     def mostra_cheque(jogo, opcoes_negras, opcoes_brancas):
         if jogo.turno < 2:
             if 'rei' in jogo.brancas.get_nomes_pecas():
@@ -130,20 +132,23 @@ class Xadrez():
                         if jogo.contador < 15:
                             pygame.draw.rect(jogo.tela, 'red', [
                                              rei.posicao[0] * 60 + 1, rei.posicao[1] * 60 + 1, 60, 60], 5)
-        # else:
-        #     if 'rei' in jogo.negras.get_nomes_pecas():
-        #         rei = jogo.n[jogo.brancas.index_nome('rei')]
-        #         for i in range(len(opcoes_brancas)):
-        #             if loc_rei in opcoes_brancas[i]:
-        #                 if jogo.contador < 15:
-        #                     pygame.draw.rect(jogo.tela, 'red', [
-        #                                      jogo.conjuntos.loc_negras[index_rei][0] * 60 + 1, jogo.conjuntos.loc_negras[index_rei][1] * 60 + 1, 60, 60], 5)
+        else:
+            if 'rei' in jogo.negras.get_nomes_pecas():
+                index = jogo.negras.index_nome('rei')
+                rei = jogo.negras[index]
+                for i in range(len(opcoes_brancas)):
+                    if rei.posicao in opcoes_brancas[i]:
+                        if jogo.contador < 15:
+                            pygame.draw.rect(jogo.tela, 'red', [
+                                             rei.posicao[0] * 60 + 1, rei.posicao[1] * 60 + 1, 60, 60], 5)
 
+    # mostra os movimentos possíveis
     def mostra_mov_possiveis(movimentos, jogo):
         for i in range(len(movimentos)):
             pygame.draw.circle(
                 jogo.tela, 'blue', (movimentos[i][0] * 60+30, movimentos[i][1] * 60+30), 5)
 
+    # mostra o vencedor
     def mostra_final(jogo):
         jogo.som_fim.play()
         jogo.som_fim.set_volume(0.1)
@@ -162,6 +167,7 @@ class Xadrez():
             jogo.tela.blit(jogo.fonte.render(
                 f'Aperte ENTER para recomeçar!', True, 'black'), (100, 240))
 
+    # verifica os movimentos possíveis para a peça selecionada
     def verificar_mov_possiveis(opcoes_negras, opcoes_brancas, jogo):
         if jogo.turno < 2:
             opcoes = opcoes_brancas
@@ -172,6 +178,7 @@ class Xadrez():
 
         return opcoes_validas
 
+    # verifica os movimentos possíveis para todas as peças
     def verifica_movimentos(self, turno):
         movimentos = []
         todos_movimentos = []
@@ -205,5 +212,6 @@ class Xadrez():
 
         return todos_movimentos
 
+    # encerra o jogo
     def fim_jogo():
         pygame.quit()

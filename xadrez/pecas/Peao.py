@@ -3,11 +3,13 @@ from pecas.Peca import Peca
 
 class Peao(Peca):
 
+    # construtor
     def __init__(self, uma_cor, uma_imagem, uma_posicao):
         super().__init__(uma_cor, "peao", uma_imagem, uma_posicao)
 
         return
 
+    # retorna os movimentos possiveis para esse tipo de peca
     def movimentos(posicao, turno, loc_brancas, loc_negras):
         movimentos = []
         if turno == 'brancas':

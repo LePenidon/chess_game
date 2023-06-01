@@ -3,11 +3,13 @@ from pecas.Peca import Peca
 
 class Bispo(Peca):
 
+    # construtor
     def __init__(self, uma_cor, uma_imagem, uma_posicao):
         super().__init__(uma_cor, "bispo", uma_imagem, uma_posicao)
 
         return
 
+    # retorna os movimentos possiveis para esse tipo de peca
     def movimentos(posicao, turno, loc_brancas, loc_negras):
         movimentos = []
         if turno == 'brancas':
@@ -17,7 +19,6 @@ class Bispo(Peca):
             pecas_da_cor = loc_negras
             pecas_outra_cor = loc_brancas
 
-        # up-right, up-left, down-right, down-left
         for i in range(4):
             passa = True
             sequencia = 1

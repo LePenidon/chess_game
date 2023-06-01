@@ -5,11 +5,13 @@ from pecas.Torre import Torre
 
 class Rainha(Peca):
 
+    # construtor
     def __init__(self, uma_cor, uma_imagem, uma_posicao):
         super().__init__(uma_cor, "rainha", uma_imagem, uma_posicao)
 
         return
 
+    # retorna os movimentos possiveis para esse tipo de peca
     def movimentos(posicao, turno, loc_brancas, loc_negras):
         movimentos_bispo = Bispo.movimentos(
             posicao, turno, loc_brancas, loc_negras)

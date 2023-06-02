@@ -12,11 +12,12 @@ class Rainha(Peca):
         return
 
     # retorna os movimentos possiveis para esse tipo de peca
-    def movimentos(posicao, turno, loc_brancas, loc_negras):
-        movimentos_bispo = Bispo.movimentos(
-            posicao, turno, loc_brancas, loc_negras)
-        movimentos_torre = Torre.movimentos(
-            posicao, turno, loc_brancas, loc_negras)
+    def movimentos(self, loc_brancas, loc_negras):
+        bispo = Bispo(self.cor, 'BispoBranco', self.posicao)
+        torre = Torre(self.cor, 'TorreBranca', self.posicao)
+
+        movimentos_bispo = bispo.movimentos(loc_brancas, loc_negras)
+        movimentos_torre = torre.movimentos(loc_brancas, loc_negras)
 
         for i in range(len(movimentos_torre)):
             movimentos_bispo.append(movimentos_torre[i])

@@ -9,9 +9,9 @@ class Cavalo(Peca):
         return
 
     # retorna os movimentos possiveis para esse tipo de peca
-    def movimentos(posicao, turno, loc_brancas, loc_negras):
+    def movimentos(self, loc_brancas, loc_negras):
         movimentos = []
-        if turno == 'brancas':
+        if self.cor == 'brancas':
             pecas_da_cor = loc_brancas
         else:
             pecas_da_cor = loc_negras
@@ -20,7 +20,8 @@ class Cavalo(Peca):
                 (-1, 2), (-1, -2), (-2, 1), (-2, -1)]
 
         for i in range(8):
-            mov_possivel = (posicao[0] + anda[i][0], posicao[1] + anda[i][1])
+            mov_possivel = (self.posicao[0] + anda[i]
+                            [0], self.posicao[1] + anda[i][1])
             if mov_possivel not in pecas_da_cor and 0 <= mov_possivel[0] <= 7 and 0 <= mov_possivel[1] <= 7:
                 movimentos.append(mov_possivel)
 

@@ -10,9 +10,10 @@ class Bispo(Peca):
         return
 
     # retorna os movimentos possiveis para esse tipo de peca
-    def movimentos(posicao, turno, loc_brancas, loc_negras):
+    def movimentos(self, loc_brancas, loc_negras):
         movimentos = []
-        if turno == 'brancas':
+
+        if self.cor == 'brancas':
             pecas_outra_cor = loc_negras
             pecas_da_cor = loc_brancas
         else:
@@ -36,12 +37,12 @@ class Bispo(Peca):
                 y = 1
 
             while passa:
-                if (posicao[0] + (sequencia * x), posicao[1] + (sequencia * y)) not in pecas_da_cor and \
-                        0 <= posicao[0] + (sequencia * x) <= 7 and 0 <= posicao[1] + (sequencia * y) <= 7:
+                if (self.posicao[0] + (sequencia * x), self.posicao[1] + (sequencia * y)) not in pecas_da_cor and \
+                        0 <= self.posicao[0] + (sequencia * x) <= 7 and 0 <= self.posicao[1] + (sequencia * y) <= 7:
                     movimentos.append(
-                        (posicao[0] + (sequencia * x), posicao[1] + (sequencia * y)))
+                        (self.posicao[0] + (sequencia * x), self.posicao[1] + (sequencia * y)))
 
-                    if (posicao[0] + (sequencia * x), posicao[1] + (sequencia * y)) in pecas_outra_cor:
+                    if (self.posicao[0] + (sequencia * x), self.posicao[1] + (sequencia * y)) in pecas_outra_cor:
                         passa = False
                     sequencia += 1
                 else:

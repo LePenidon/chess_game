@@ -136,7 +136,7 @@ while rodando:
     # verifica se houve um vencedor
     if jogo.vencedor != '':
         jogo.fim = True
-        Xadrez.mostra_final()
+        jogo.mostra_final()
 
     pygame.display.flip()
 

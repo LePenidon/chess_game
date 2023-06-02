@@ -1,10 +1,5 @@
 import pygame
 from pecas.Rainha import Rainha
-from pecas.Rei import Rei
-from pecas.Torre import Torre
-from pecas.Bispo import Bispo
-from pecas.Cavalo import Cavalo
-from pecas.Peao import Peao
 from Conjuntos import Conjuntos
 
 
@@ -191,8 +186,6 @@ class Xadrez():
                 self.negras[self.selecao] = Rainha(
                     'negras', 'RainhaPreta', self.negras[self.selecao].posicao)
 
-    # verifica os movimentos possíveis para todas as peças
-
     def verifica_movimentos(self, turno):
         movimentos = []
         todos_movimentos = []
@@ -203,24 +196,8 @@ class Xadrez():
             pecas = self.negras
 
         for i in pecas:
-            if i.nome == 'peao':
-                movimentos = Peao.movimentos(
-                    i.posicao, turno, self.brancas.get_posicoes_pecas(), self.negras.get_posicoes_pecas())
-            elif i.nome == 'torre':
-                movimentos = Torre.movimentos(
-                    i.posicao, turno, self.brancas.get_posicoes_pecas(), self.negras.get_posicoes_pecas())
-            elif i.nome == 'cavalo':
-                movimentos = Cavalo.movimentos(
-                    i.posicao, turno, self.brancas.get_posicoes_pecas(), self.negras.get_posicoes_pecas())
-            elif i.nome == 'bispo':
-                movimentos = Bispo.movimentos(
-                    i.posicao, turno, self.brancas.get_posicoes_pecas(), self.negras.get_posicoes_pecas())
-            elif i.nome == 'rainha':
-                movimentos = Rainha.movimentos(
-                    i.posicao, turno, self.brancas.get_posicoes_pecas(), self.negras.get_posicoes_pecas())
-            elif i.nome == 'rei':
-                movimentos = Rei.movimentos(
-                    i.posicao, turno, self.brancas.get_posicoes_pecas(), self.negras.get_posicoes_pecas())
+            movimentos = i.movimentos(self.brancas.get_posicoes_pecas(
+            ), self.negras.get_posicoes_pecas())
 
             todos_movimentos.append(movimentos)
 

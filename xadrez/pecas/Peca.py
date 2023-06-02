@@ -26,5 +26,5 @@ class Peca(ABC):
     # metodo abstrato para movimentos
     # retorna os movimentos possiveis para cada tipo de peca
     @abstractmethod
-    def movimentos(self, posicao, turno):
+    def movimentos(self, loc_brancas, loc_negras):
         return []

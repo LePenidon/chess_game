@@ -1,7 +1,6 @@
 import pygame
 from Xadrez import Xadrez
 from Conjuntos import Conjuntos
-from pecas.Rainha import Rainha
 
 # cria o objeto jogo
 jogo = Xadrez.inicio_jogo()
@@ -24,15 +23,15 @@ while rodando:
     jogo.tela.fill('dark grey')
 
     # mostra o tabuleiro e as peças
-    Xadrez.mostra_tabuleiro(jogo)
-    Xadrez.mostra_pecas(jogo)
-    Xadrez.mostra_cheque(jogo, opcoes_negras, opcoes_brancas)
+    jogo.mostra_tabuleiro()
+    jogo.mostra_pecas()
+    jogo.mostra_cheque(opcoes_negras, opcoes_brancas)
 
     # mostra os movimentos possíveis
     if jogo.selecao != 100:
-        jogo.movimentos_validos = Xadrez.verificar_mov_possiveis(
-            opcoes_negras, opcoes_brancas, jogo)
-        Xadrez.mostra_mov_possiveis(jogo.movimentos_validos, jogo)
+        jogo.movimentos_validos = jogo.verificar_mov_possiveis(
+            opcoes_negras, opcoes_brancas)
+        jogo.mostra_mov_possiveis(jogo.movimentos_validos)
 
     for evento in pygame.event.get():
         if evento.type == pygame.QUIT:
@@ -75,9 +74,7 @@ while rodando:
                             jogo.negras.index_posicao(peca_negra.posicao))
 
                     # verifica promoção do peão
-                    if jogo.brancas[jogo.selecao].nome == 'peao' and jogo.brancas[jogo.selecao].posicao[1] == 7:
-                        jogo.brancas[jogo.selecao] = Rainha(
-                            'brancas', 'RainhaBranca', jogo.brancas[jogo.selecao].posicao)
+                    jogo.verifica_promocao()
 
                     # atualiza o jogo
                     opcoes_negras = jogo.verifica_movimentos('negras')
@@ -112,9 +109,7 @@ while rodando:
                             jogo.brancas.index_posicao(peca_branca.posicao))
 
                     # verifica promoção do peão
-                    if jogo.negras[jogo.selecao].nome == 'peao' and jogo.negras[jogo.selecao].posicao[1] == 0:
-                        jogo.negras[jogo.selecao] = Rainha(
-                            'negras', 'RainhaPreta', jogo.negras[jogo.selecao].posicao)
+                    jogo.verifica_promocao()
 
                     # atualiza o jogo
                     opcoes_negras = jogo.verifica_movimentos('negras')
@@ -141,7 +136,7 @@ while rodando:
     # verifica se houve um vencedor
     if jogo.vencedor != '':
         jogo.fim = True
-        Xadrez.mostra_final(jogo)
+        Xadrez.mostra_final()
 
     pygame.display.flip()
 

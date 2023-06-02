@@ -186,6 +186,7 @@ class Xadrez():
                 self.negras[self.selecao] = Rainha(
                     'negras', 'RainhaPreta', self.negras[self.selecao].posicao)
 
+    # verifica o movimento de todas as peças
     def verifica_movimentos(self, turno):
         movimentos = []
         todos_movimentos = []

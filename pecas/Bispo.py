@@ -3,21 +3,23 @@ from pecas.Peca import Peca
 
 class Bispo(Peca):
 
-    def __init__(self, uma_cor, uma_imagem):
-        super().__init__(uma_cor, "bispo", uma_imagem)
+    # construtor
+    def __init__(self, uma_cor, uma_imagem, uma_posicao):
+        super().__init__(uma_cor, "bispo", uma_imagem, uma_posicao)
 
         return
 
-    def movimentos(posicao, turno, loc_brancas, loc_negras):
+    # retorna os movimentos possiveis para esse tipo de peca
+    def movimentos(self, loc_brancas, loc_negras):
         movimentos = []
-        if turno == 'brancas':
+
+        if self.cor == 'brancas':
             pecas_outra_cor = loc_negras
             pecas_da_cor = loc_brancas
         else:
             pecas_da_cor = loc_negras
             pecas_outra_cor = loc_brancas
 
-        # up-right, up-left, down-right, down-left
         for i in range(4):
             passa = True
             sequencia = 1
@@ -35,12 +37,12 @@ class Bispo(Peca):
                 y = 1
 
             while passa:
-                if (posicao[0] + (sequencia * x), posicao[1] + (sequencia * y)) not in pecas_da_cor and \
-                        0 <= posicao[0] + (sequencia * x) <= 7 and 0 <= posicao[1] + (sequencia * y) <= 7:
+                if (self.posicao[0] + (sequencia * x), self.posicao[1] + (sequencia * y)) not in pecas_da_cor and \
+                        0 <= self.posicao[0] + (sequencia * x) <= 7 and 0 <= self.posicao[1] + (sequencia * y) <= 7:
                     movimentos.append(
-                        (posicao[0] + (sequencia * x), posicao[1] + (sequencia * y)))
+                        (self.posicao[0] + (sequencia * x), self.posicao[1] + (sequencia * y)))
 
-                    if (posicao[0] + (sequencia * x), posicao[1] + (sequencia * y)) in pecas_outra_cor:
+                    if (self.posicao[0] + (sequencia * x), self.posicao[1] + (sequencia * y)) in pecas_outra_cor:
                         passa = False
                     sequencia += 1
                 else:

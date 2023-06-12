@@ -7,69 +7,61 @@ from pecas.Peao import Peao
 
 
 class Conjuntos():
+    # atributos
     pecas = 0
-    movimentos_validos = 0
+    cor = 0
+    imagens = []
 
-    brancas = 0
-    negras = 0
+    # construtor
+    def __init__(self, cor):
+        if cor == 'brancas':
+            self.pecas = [Torre('brancas', 'TorreBranca', (0, 0)), Cavalo('brancas', 'CavaloBranco', (1, 0)), Bispo('brancas', 'BispoBranco', (2, 0)), Rei('brancas', 'ReiBranco', (3, 0)), Rainha('brancas', 'RainhaBranca', (4, 0)), Bispo('brancas', 'BispoBranco', (5, 0)), Cavalo('brancas', 'CavaloBranco', (6, 0)), Torre(
+                'brancas', 'TorreBranca', (7, 0)), Peao('brancas', 'PeaoBranco', (0, 1)), Peao('brancas', 'PeaoBranco', (1, 1)), Peao('brancas', 'PeaoBranco', (2, 1)), Peao('brancas', 'PeaoBranco', (3, 1)), Peao('brancas', 'PeaoBranco', (4, 1)), Peao('brancas', 'PeaoBranco', (5, 1)), Peao('brancas', 'PeaoBranco', (6, 1)), Peao('brancas', 'PeaoBranco', (7, 1))]
 
-    loc_brancas = 0
-    loc_negras = 0
+        elif cor == 'negras':
+            self.pecas = [Torre('negras', 'TorrePreta', (0, 7)), Cavalo('negras', 'CavaloPreto', (1, 7)), Bispo('negras', 'BispoPreto', (2, 7)), Rei('negras', 'ReiPreto', (3, 7)), Rainha('negras', 'RainhaPreta', (4, 7)), Bispo('negras', 'BispoPreto', (5, 7)), Cavalo('negras', 'CavaloPreto', (6, 7)), Torre(
+                'negras', 'TorrePreta', (7, 7)), Peao('negras', 'PeaoPreto', (0, 6)), Peao('negras', 'PeaoPreto', (1, 6)), Peao('negras', 'PeaoPreto', (2, 6)), Peao('negras', 'PeaoPreto', (3, 6)), Peao('negras', 'PeaoPreto', (4, 6)), Peao('negras', 'PeaoPreto', (5, 6)), Peao('negras', 'PeaoPreto', (6, 6)), Peao('negras', 'PeaoPreto', (7, 6))]
 
-    cap_brancas = 0
-    cap_negras = 0
+        self.cor = cor
+        self.imagens = [i.imagem for i in self.pecas]
 
-    def __init__(self):
-        self.brancas = ['torre', 'cavalo', 'bispo', 'rei', 'rainha', 'bispo', 'cavalo', 'torre',
-                        'peao', 'peao', 'peao', 'peao', 'peao', 'peao', 'peao', 'peao']
-        self.loc_brancas = [(0, 0), (1, 0), (2, 0), (3, 0), (4, 0), (5, 0), (6, 0), (7, 0),
-                            (0, 1), (1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1), (7, 1)]
+        for i in self.pecas:
+            self.imagens.append(i.imagem)
 
-        self.negras = ['torre', 'cavalo', 'bispo', 'rei', 'rainha', 'bispo', 'cavalo', 'torre',
-                       'peao', 'peao', 'peao', 'peao', 'peao', 'peao', 'peao', 'peao']
-        self.loc_negras = [(0, 7), (1, 7), (2, 7), (3, 7), (4, 7), (5, 7), (6, 7), (7, 7),
-                           (0, 6), (1, 6), (2, 6), (3, 6), (4, 6), (5, 6), (6, 6), (7, 6)]
+        return
 
-        self.cap_brancas = []
-        self.cap_negras = []
+    # itera sobre as pecas
+    def __iter__(self):
+        return iter(self.pecas)
 
-        self.movimentos_validos = []
+    # acessa as pecas
+    def __getitem__(self, index):
+        return self.pecas[index]
 
-        self.pecas = ['peao', 'rainha', 'rei', 'cavalo', 'torre', 'bispo']
+    def __setitem__(self, index, value):
+        self.pecas[index] = value
 
-    def verifica_movimentos(self, turno):
-        movimentos = []
-        todos_movimentos = []
+    # retorna os nomes das pecas
 
-        if turno == 'brancas':
-            localizacoes = self.loc_brancas
-            pecas = self.brancas
-        else:
-            localizacoes = self.loc_negras
-            pecas = self.negras
+    def get_nomes_pecas(self):
+        nomes = [i.nome for i in self.pecas]
 
-        for i in range((len(pecas))):
-            loc = localizacoes[i]
-            peca = pecas[i]
-            if peca == 'peao':
-                movimentos = Peao.movimentos(
-                    loc, turno, self.loc_brancas, self.loc_negras)
-            elif peca == 'torre':
-                movimentos = Torre.movimentos(
-                    loc, turno, self.loc_brancas, self.loc_negras)
-            elif peca == 'cavalo':
-                movimentos = Cavalo.movimentos(
-                    loc, turno, self.loc_brancas, self.loc_negras)
-            elif peca == 'bispo':
-                movimentos = Bispo.movimentos(
-                    loc, turno, self.loc_brancas, self.loc_negras)
-            elif peca == 'rainha':
-                movimentos = Rainha.movimentos(
-                    loc, turno, self.loc_brancas, self.loc_negras)
-            elif peca == 'rei':
-                movimentos = Rei.movimentos(
-                    loc, turno, self.loc_brancas, self.loc_negras)
+        return nomes
 
-            todos_movimentos.append(movimentos)
+    # retorna as posicoes das pecas
+    def get_posicoes_pecas(self):
+        posicoes = [i.posicao for i in self.pecas]
 
-        return todos_movimentos
+        return posicoes
+
+    # retorna o index da peca, dado o nome
+    def index_nome(self, nome):
+        for i in range(len(self.pecas)):
+            if self.pecas[i].nome == nome:
+                return i
+
+    # retorna o index da peca, dado a posicao
+    def index_posicao(self, posicao):
+        for i in range(len(self.pecas)):
+            if self.pecas[i].posicao == posicao:
+                return i

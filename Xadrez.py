@@ -1,16 +1,13 @@
 import pygame
 from pecas.Rainha import Rainha
-from pecas.Rei import Rei
-from pecas.Torre import Torre
-from pecas.Bispo import Bispo
-from pecas.Cavalo import Cavalo
-from pecas.Peao import Peao
 from Conjuntos import Conjuntos
 
 
 class Xadrez():
+    # atributos
+    brancas = 0
+    negras = 0
     conjuntos = 0
-
     comprimento = 0
     altura = 0
     tela = 0
@@ -20,20 +17,18 @@ class Xadrez():
     fps = 0
     turno = 0
     selecao = 0
-
-    imagens_brancas = 0
-    imagens_negras = 0
-
+    movimentos_validos = 0
     contador = 0
     vencedor = 0
     fim = 0
-
     som_mov = 0
     som_inicio = 0
     som_fim = 0
 
+    # construtor
     def __init__(self):
-        self.conjuntos = Conjuntos()
+        self.brancas = Conjuntos("brancas")
+        self.negras = Conjuntos("negras")
 
         self.comprimento = 480
         self.altura = 600
@@ -44,44 +39,19 @@ class Xadrez():
         self.fonte_media = pygame.font.Font(pygame.font.get_default_font(), 40)
         self.tempo = pygame.time.Clock()
         self.fps = 60
-
         self.turno = 0
         self.selecao = 100
-
-        rainha_brancas = Rainha('brancas', 'RainhaBranca')
-        rainha_negras = Rainha('negras', 'RainhaPreta')
-
-        rei_brancas = Rei('brancas', 'ReiBranco')
-        rei_negras = Rei('negras', 'ReiPreto')
-
-        torre_brancas = Torre('brancas', 'TorreBranca')
-        torre_negras = Torre('negras', 'TorrePreta')
-
-        bispo_brancas = Bispo('brancas', 'BispoBranco')
-        bispo_negras = Bispo('negras', 'BispoPreto')
-
-        cavalo_brancas = Cavalo('brancas', 'CavaloBranco')
-        cavalo_negras = Cavalo('negras', 'CavaloPreto')
-
-        peao_brancas = Peao('brancas', 'PeaoBranco')
-        peao_negras = Peao('negras', 'PeaoPreto')
-
-        self.imagens_brancas = [peao_brancas.imagem, rainha_brancas.imagem, rei_brancas.imagem,
-                                cavalo_brancas.imagem, torre_brancas.imagem, bispo_brancas.imagem]
-
-        self.imagens_negras = [peao_negras.imagem, rainha_negras.imagem, rei_negras.imagem,
-                               cavalo_negras.imagem, torre_negras.imagem, bispo_negras.imagem]
-
+        self.movimentos_validos = []
         self.contador = 0
         self.vencedor = ''
         self.fim = False
-
         self.som_mov = pygame.mixer.Sound("./sons/movimento.mp3")
         self.som_inicio = pygame.mixer.Sound("./sons/inicio.mp3")
         self.som_fim = pygame.mixer.Sound("./sons/fim.mp3")
 
         return
 
+    # inicia o jogo
     def inicio_jogo():
         pygame.init()
         pygame.font.init()
@@ -92,112 +62,148 @@ class Xadrez():
 
         return jogo
 
-    def mostra_tabuleiro(jogo):
+    # mostra o tabuleiro
+    def mostra_tabuleiro(self):
         for i in range(32):
             coluna = i % 4
             linha = i // 4
             if linha % 2 == 0:
-                pygame.draw.rect(jogo.tela, 'light gray', [
+                pygame.draw.rect(self.tela, 'light gray', [
                     (coluna * 120), linha * 60, 60, 60])
             else:
-                pygame.draw.rect(jogo.tela, 'light gray', [
+                pygame.draw.rect(self.tela, 'light gray', [
                     60+(coluna * 120), linha * 60, 60, 60])
 
             texto = ['Brancas', 'Brancas',
                      'Negras', 'Negras']
 
-            if jogo.turno < 2:
-                jogo.tela.blit(jogo.fonte_media.render(
-                    texto[jogo.turno], True, 'white'), (160, 530))
+            if self.turno < 2:
+                self.tela.blit(self.fonte_media.render(
+                    texto[self.turno], True, 'white'), (160, 530))
             else:
-                jogo.tela.blit(jogo.fonte_media.render(
-                    texto[jogo.turno], True, 'black'), (160, 530))
+                self.tela.blit(self.fonte_media.render(
+                    texto[self.turno], True, 'black'), (160, 530))
 
             for i in range(9):
-                pygame.draw.line(jogo.tela, 'black',
+                pygame.draw.line(self.tela, 'black',
                                  (0, 60 * i), (480, 60 * i), 2)
-                pygame.draw.line(jogo.tela, 'black',
+                pygame.draw.line(self.tela, 'black',
                                  (60 * i, 0), (60 * i, 480), 2)
 
-    def mostra_pecas(jogo):
-        for i in range(len(jogo.conjuntos.brancas)):
-            index = jogo.conjuntos.pecas.index(jogo.conjuntos.brancas[i])
-            if jogo.conjuntos.brancas[i] == 'peao':
-                jogo.tela.blit(
-                    jogo.imagens_brancas[0], ((jogo.conjuntos.loc_brancas[i][0] * 60)+10, (jogo.conjuntos.loc_brancas[i][1] * 60)+10))
+    # mostra as peças
+    def mostra_pecas(self):
+        for i in self.brancas:
+            if i.nome == 'peao':
+                self.tela.blit(
+                    i.imagem, ((i.posicao[0] * 60)+10, (i.posicao[1] * 60)+10))
             else:
-                jogo.tela.blit(jogo.imagens_brancas[index], ((jogo.conjuntos.loc_brancas[i]
-                                                              [0] * 60)+10, (jogo.conjuntos.loc_brancas[i][1] * 60)+10))
-            if jogo.turno < 2:
-                if jogo.selecao == i:
-                    pygame.draw.rect(jogo.tela, 'blue', [
-                                    (jogo.conjuntos.loc_brancas[i][0] * 60)+2, (jogo.conjuntos.loc_brancas[i][1] * 60)+2, 60, 60], 2)
+                self.tela.blit(
+                    i.imagem, ((i.posicao[0] * 60)+10, (i.posicao[1] * 60)+10))
+            if self.turno < 2:
+                if self.selecao == self.brancas.index_posicao(i.posicao):
+                    pygame.draw.rect(self.tela, 'blue', [
+                                     (i.posicao[0] * 60)+2, (i.posicao[1] * 60)+2, 60, 60], 2)
 
-        for i in range(len(jogo.conjuntos.negras)):
-            index = jogo.conjuntos.pecas.index(jogo.conjuntos.negras[i])
-            if jogo.conjuntos.negras[i] == 'peao':
-                jogo.tela.blit(
-                    jogo.imagens_negras[0], ((jogo.conjuntos.loc_negras[i][0] * 60)+10, (jogo.conjuntos.loc_negras[i][1] * 60)+10))
+        for i in self.negras:
+            if i.nome == 'peao':
+                self.tela.blit(
+                    i.imagem, ((i.posicao[0] * 60)+10, (i.posicao[1] * 60)+10))
             else:
-                jogo.tela.blit(jogo.imagens_negras[index], ((jogo.conjuntos.loc_negras[i]
-                                                            [0] * 60)+10, (jogo.conjuntos.loc_negras[i][1] * 60)+10))
-            if jogo.turno >= 2:
-                if jogo.selecao == i:
-                    pygame.draw.rect(jogo.tela, 'blue', [
-                                    (jogo.conjuntos.loc_negras[i][0] * 60)+2, (jogo.conjuntos.loc_negras[i][1] * 60)+2, 60, 60], 2)
+                self.tela.blit(
+                    i.imagem, ((i.posicao[0] * 60)+10, (i.posicao[1] * 60)+10))
+            if self.turno >= 2:
+                if self.selecao == self.negras.index_posicao(i.posicao):
+                    pygame.draw.rect(self.tela, 'blue', [
+                                     (i.posicao[0] * 60)+2, (i.posicao[1] * 60)+2, 60, 60], 2)
 
-    def mostra_cheque(jogo, opcoes_negras, opcoes_brancas):
-        if jogo.turno < 2:
-            if 'rei' in jogo.conjuntos.brancas:
-                index_rei = jogo.conjuntos.brancas.index('rei')
-                loc_rei = jogo.conjuntos.loc_brancas[index_rei]
+    # mostra se há cheque
+    def mostra_cheque(self, opcoes_negras, opcoes_brancas):
+        if self.turno < 2:
+            if 'rei' in self.brancas.get_nomes_pecas():
+                index = self.brancas.index_nome('rei')
+                rei = self.brancas[index]
                 for i in range(len(opcoes_negras)):
-                    if loc_rei in opcoes_negras[i]:
-                        if jogo.contador < 15:
-                            pygame.draw.rect(jogo.tela, 'red', [jogo.conjuntos.loc_brancas[index_rei][0] * 60 + 1,
-                                                                jogo.conjuntos.loc_brancas[index_rei][1] * 60 + 1, 60, 60], 5)
+                    if rei.posicao in opcoes_negras[i]:
+                        if self.contador < 15:
+                            pygame.draw.rect(self.tela, 'red', [
+                                             rei.posicao[0] * 60 + 1, rei.posicao[1] * 60 + 1, 60, 60], 5)
         else:
-            if 'rei' in jogo.conjuntos.negras:
-                index_rei = jogo.conjuntos.negras.index('rei')
-                loc_rei = jogo.conjuntos.loc_negras[index_rei]
+            if 'rei' in self.negras.get_nomes_pecas():
+                index = self.negras.index_nome('rei')
+                rei = self.negras[index]
                 for i in range(len(opcoes_brancas)):
-                    if loc_rei in opcoes_brancas[i]:
-                        if jogo.contador < 15:
-                            pygame.draw.rect(jogo.tela, 'red', [jogo.conjuntos.loc_negras[index_rei][0] * 60 + 1,
-                                                                jogo.conjuntos.loc_negras[index_rei][1] * 60 + 1, 60, 60], 5)
+                    if rei.posicao in opcoes_brancas[i]:
+                        if self.contador < 15:
+                            pygame.draw.rect(self.tela, 'red', [
+                                             rei.posicao[0] * 60 + 1, rei.posicao[1] * 60 + 1, 60, 60], 5)
 
-    def mostra_mov_possiveis(movimentos, jogo):
+    # mostra os movimentos possíveis
+    def mostra_mov_possiveis(self, movimentos):
+        movimentos = self.movimentos_validos
         for i in range(len(movimentos)):
             pygame.draw.circle(
-                jogo.tela, 'blue', (movimentos[i][0] * 60+30, movimentos[i][1] * 60+30), 5)
+                self.tela, 'blue', (movimentos[i][0] * 60+30, movimentos[i][1] * 60+30), 5)
 
-    def mostra_final(jogo):
-        jogo.som_fim.play()
-        jogo.som_fim.set_volume(0.1)
+    # mostra o vencedor
+    def mostra_final(self):
+        self.som_fim.play()
+        self.som_fim.set_volume(0.1)
 
-        pygame.draw.rect(jogo.tela, 'red', [90, 200, 340, 70])
+        pygame.draw.rect(self.tela, 'red', [90, 200, 340, 70])
 
-        if jogo.vencedor == 'brancas':
-            jogo.tela.blit(jogo.fonte.render(
-                f'{jogo.vencedor} venceu!', True, 'white'), (100, 210))
-            jogo.tela.blit(jogo.fonte.render(
+        if self.vencedor == 'brancas':
+            self.tela.blit(self.fonte.render(
+                f'{self.vencedor} venceu!', True, 'white'), (100, 210))
+            self.tela.blit(self.fonte.render(
                 f'Aperte ENTER para recomeçar!', True, 'white'), (100, 240))
 
-        elif jogo.vencedor == 'negras':
-            jogo.tela.blit(jogo.fonte.render(
-                f'{jogo.vencedor} venceu!', True, 'black'), (100, 210))
-            jogo.tela.blit(jogo.fonte.render(
+        elif self.vencedor == 'negras':
+            self.tela.blit(self.fonte.render(
+                f'{self.vencedor} venceu!', True, 'black'), (100, 210))
+            self.tela.blit(self.fonte.render(
                 f'Aperte ENTER para recomeçar!', True, 'black'), (100, 240))
 
-    def verificar_mov_possiveis(opcoes_negras, opcoes_brancas, jogo):
-        if jogo.turno < 2:
+    # verifica os movimentos possíveis para a peça selecionada
+    def verificar_mov_possiveis(self, opcoes_negras, opcoes_brancas):
+        if self.turno < 2:
             opcoes = opcoes_brancas
         else:
             opcoes = opcoes_negras
 
-        opcoes_validas = opcoes[jogo.selecao]
+        opcoes_validas = opcoes[self.selecao]
 
         return opcoes_validas
 
+    # verifica promoção do peão
+    def verifica_promocao(self):
+        if self.turno <= 1:
+            if self.brancas[self.selecao].nome == 'peao' and self.brancas[self.selecao].posicao[1] == 7:
+                self.brancas[self.selecao] = Rainha(
+                    'brancas', 'RainhaBranca', self.brancas[self.selecao].posicao)
+
+        elif self.turno > 1:
+            if self.negras[self.selecao].nome == 'peao' and self.negras[self.selecao].posicao[1] == 0:
+                self.negras[self.selecao] = Rainha(
+                    'negras', 'RainhaPreta', self.negras[self.selecao].posicao)
+
+    # verifica o movimento de todas as peças
+    def verifica_movimentos(self, turno):
+        movimentos = []
+        todos_movimentos = []
+
+        if turno == 'brancas':
+            pecas = self.brancas
+        else:
+            pecas = self.negras
+
+        for i in pecas:
+            movimentos = i.movimentos(self.brancas.get_posicoes_pecas(
+            ), self.negras.get_posicoes_pecas())
+
+            todos_movimentos.append(movimentos)
+
+        return todos_movimentos
+
+    # encerra o jogo
     def fim_jogo():
         pygame.quit()

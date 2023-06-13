@@ -4,10 +4,10 @@ import pygame
 
 class Peca(ABC):
     # atributos
-    cor = ''
-    imagem = ''
-    nome = ''
-    posicao = (-1, -1)
+    cor = None
+    imagem = None
+    nome = None
+    posicao = None
 
     # construtor
     def __init__(self, uma_cor, um_nome, uma_imagem, uma_posicao):

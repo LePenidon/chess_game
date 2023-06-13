@@ -8,8 +8,8 @@ from pecas.Peao import Peao
 
 class Conjuntos():
     # atributos
-    pecas = []
-    cor = ''
+    pecas = 0
+    cor = 0
     imagens = []
 
     # construtor
